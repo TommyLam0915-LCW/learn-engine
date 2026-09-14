@@ -1,0 +1,2193 @@
+[
+ {
+  "id": "A0001",
+  "title": "Total probability theorem（全機率定理）",
+  "salience": 10,
+  "source_name": "6.431x Unit 2｜Bertsekas & Tsitsiklis 1.3–1.5",
+  "source_quote": "Let A1 , . . . , An be disjoint events that form a partition of the sample space (each possible outcome is included in exactly one of the events A1 , . . . , An ) and assume that P(Ai ) > 0, for all i. Then, for any event B, we have P(B) = P(A1 )P(B | A1 ) + · · · + P(An )P(B | An ).",
+  "irreducible_premises": [
+   "A1, …, An are mutually exclusive (every pairwise intersection is empty)",
+   "A1, …, An are exhaustive (their union is Ω, and every outcome lies in exactly one of them)",
+   "P(Ai) > 0 holds for every i",
+   "Finite additivity of probability",
+   "The multiplication rule P(Ai ∩ B) = P(Ai) P(B | Ai)"
+  ],
+  "derivation_chain": [
+   "Because the partition is mutually exclusive and exhaustive, the event B is cut into the n pieces B ∩ A1, …, B ∩ An, which are themselves mutually exclusive",
+   "By additivity, P(B) equals the sum of the probabilities of these n pieces",
+   "Rewrite each piece using the multiplication rule as P(Ai) P(B | Ai)",
+   "Adding them up gives P(B) = Σ P(Ai) P(B | Ai): first compute the conditional probability case by case, then weight each case by the probability that it occurs",
+   "Use the partition premise to decompose B as the disjoint union (B ∩ A_1) ∪ (B ∩ A_2) ∪ (B ∩ A_3) ∪ ... — the shaded slices of the ellipse in the p08 figure.",
+   "Apply the additivity premise to that disjoint union: P(B) = Σ_i P(B ∩ A_i), the first handwritten line.",
+   "Rewrite each term with the multiplication rule premise: P(B ∩ A_i) = P(A_i) P(B | A_i), giving P(B) = Σ_i P(A_i) P(B | A_i), the boxed result.",
+   "Observe from the partition premise that Σ_i P(A_i) = 1, as annotated, so the coefficients are legitimate weights summing to one.",
+   "Conclude that P(B) is a convex combination — a weighted average — of the numbers P(B | A_i), hence always lies between the smallest and largest of them; on p06, P(B) = 0.05 × 0.99 + 0.95 × 0.10 = 0.1445 lies between 0.10 and 0.99."
+  ],
+  "assumptions": [
+   "The partition must be both mutually exclusive and exhaustive; neither condition can be dropped",
+   "Every P(Ai) > 0, otherwise the conditional probability in that term is undefined",
+   "Each A_i used in the sum has P(A_i) > 0 so that P(B | A_i) is defined",
+   "The same event B is used in every conditional term"
+  ],
+  "failure_modes": [
+   "If the cases are not mutually exclusive (e.g. conditioning on \"it rains\" and \"the temperature is below 10 degrees\"), the overlap is counted twice and the sum exceeds the true value",
+   "If the cases are not exhaustive, the remaining scenarios are omitted and the sum falls short of the true value; the probability of the missing piece is exactly the error bound",
+   "When some P(Ai) = 0 that term's conditional probability is undefined, so the zero-probability pieces must be removed before the formula can be applied",
+   "If the partition is not exhaustive, the sum only covers B ∩ (∪A_i) and understates P(B) by exactly P(B ∩ (∪A_i)^c) — the omitted slice is the error.",
+   "If the A_i overlap, the shared region B ∩ A_i ∩ A_j is counted twice and the sum can exceed 1, producing a 'probability' that is not a probability.",
+   "Averaging the conditionals with equal weights instead of weights P(A_i) gives the wrong answer whenever the partition is unbalanced: on p06 the unweighted mean (0.99 + 0.10)/2 = 0.545 versus the correct 0.1445, a nearly four-fold overstatement because the rare cause A has weight only 0.05."
+  ],
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "Without looking at any notes, write out the full derivation chain of the \"total probability theorem\": from the irreducible premises to the conclusion, doing exactly one thing per step, and naming the assumption each step relies on.",
+    "grading_key": [
+     "Because the partition is mutually exclusive and exhaustive, the event B is cut into the n pieces B ∩ A1, …, B ∩ An, which are themselves mutually exclusive",
+     "By additivity, P(B) equals the sum of the probabilities of these n pieces",
+     "Rewrite each piece using the multiplication rule as P(Ai) P(B | Ai)",
+     "The partition must be both mutually exclusive and exhaustive; neither condition can be dropped"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "Under what circumstances does the \"total probability theorem\" fail? Give a concrete counterexample (with numbers or an explicit setup) and state which assumption is violated.",
+    "grading_key": [
+     "If the cases are not mutually exclusive (e.g. conditioning on \"it rains\" and \"the temperature is below 10 degrees\"), the overlap is counted twice and the sum exceeds the true value",
+     "The partition must be both mutually exclusive and exhaustive; neither condition can be dropped",
+     "Every P(Ai) > 0, otherwise the conditional probability in that term is undefined"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "The following argument contains one error; identify which step is wrong and explain why: \"Since A1, …, An are mutually exclusive (every pairwise intersection is empty), the \"total probability theorem\" holds; and since it holds, the conclusion remains valid even if \"the partition must be both mutually exclusive and exhaustive; neither condition can be dropped\" is not satisfied.\"",
+    "grading_key": [
+     "Identify the assumption that was quietly relaxed: the partition must be both mutually exclusive and exhaustive; neither condition can be dropped",
+     "Explain which step of the derivation collapses first once this assumption fails",
+     "If the cases are not mutually exclusive (e.g. conditioning on \"it rains\" and \"the temperature is below 10 degrees\"), the overlap is counted twice and the sum exceeds the true value"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "Use the \"total probability theorem\" to explain one decision in a real setting you are working on (cloud customer usage forecasting / recruiting conversion funnel / sales lead scoring), and state where this principle would break down in that setting.",
+    "grading_key": [
+     "A concrete decision is identified",
+     "The mapping is isomorphic",
+     "The failure condition in that setting is identified"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "passed",
+   "iterations": [
+    {
+     "ts": "2026-09-12T13:01:46+00:00",
+     "overall": 3.77,
+     "causal_completeness": 1.9,
+     "eli12": 5,
+     "analogy_isomorphism": 4,
+     "boundary_awareness": 4.2,
+     "jargon_violations": [],
+     "gap_log": [
+      "Failure boundary not stated: if the cases are not exhaustive, the remaining scenarios are omitted and the sum falls short of the true value; the probability of the missing piece is exactly the error bound",
+      "Failure boundary not stated: when some P(Ai) = 0 that term's conditional probability is undefined, so the zero-probability pieces must be removed before the formula can be applied"
+     ],
+     "next_probe": "Explain when this fails: if the cases are not exhaustive, the remaining scenarios are omitted and the sum falls short of the true value; the probability of the missing piece is exactly the error bound"
+    },
+    {
+     "ts": "2026-09-12T13:04:35+00:00",
+     "overall": 4,
+     "causal_completeness": 2.8,
+     "eli12": 5,
+     "analogy_isomorphism": 4,
+     "boundary_awareness": 4.2,
+     "jargon_violations": [],
+     "gap_log": [
+      "Follow-up: if the core condition of the \"total probability theorem\" is relaxed by one notch, which step of your derivation collapses first?"
+     ],
+     "next_probe": "Follow-up: if the core condition of the \"total probability theorem\" is relaxed by one notch, which step of your derivation collapses first?"
+    }
+   ]
+  },
+  "fsrs": {
+   "state": "review",
+   "stability": 3.2602,
+   "difficulty": 4.868,
+   "retrievability_at_review": 1,
+   "interval": 3,
+   "last_review": "2026-09-12T13:04:35+00:00",
+   "due": "2026-09-15T13:04:35+00:00",
+   "reps": 2,
+   "lapses": 0
+  },
+  "consecutive_lapses": 0,
+  "needs_human_confirm": true,
+  "created_at": "2026-09-12T12:52:45+00:00",
+  "transfers": [
+   {
+    "ts": "2026-09-12T13:04:47+00:00",
+    "verdict": "通過",
+    "holes": [],
+    "file": "/tmp/transfer_a0001.txt"
+   }
+  ],
+  "merged_sources": [
+   "6.431x Unit 2｜L2 annotated slides"
+  ]
+ },
+ {
+  "id": "A0002",
+  "title": "Why conditional probability（條件機率）is a new probability law（機率律）",
+  "salience": 9,
+  "source_name": "6.431x Unit 2｜Bertsekas & Tsitsiklis 1.3–1.5",
+  "source_quote": "The conditional probability of an event A, given an event B with P(B) > 0, is defined by P(A | B) = P(A ∩ B) / P(B), and specifies a new (conditional) probability law on the same sample space Ω.",
+  "irreducible_premises": [
+   "The original probability law P is already defined on the sample space Ω and satisfies the three axioms of nonnegativity, normalization, and additivity",
+   "The event B satisfies P(B) > 0",
+   "The defining formula of conditional probability, P(A | B) = P(A ∩ B) / P(B), where dividing by P(B) serves to make the probability of B itself equal to 1"
+  ],
+  "derivation_chain": [
+   "Discard the part of A that does not lie inside B, so that only A ∩ B remains possible",
+   "The total remaining probability is then P(B), not 1, so the normalization axiom is violated",
+   "Renormalize by dividing through by P(B), which gives P(B | B) = 1 and restores normalization",
+   "Nonnegativity and additivity are preserved under division by a positive constant, so all three axioms hold",
+   "Hence P(· | B) is itself a complete probability law, and every theorem proved for the original law carries over unchanged"
+  ],
+  "assumptions": [
+   "P(B) > 0, otherwise the denominator of the defining formula is zero",
+   "B is a fixed event; once B changes you are working with a different probability law, and the two must not be mixed"
+  ],
+  "failure_modes": [
+   "When P(B) = 0, P(A | B) is undefined; single-point events for continuous random variables have probability zero, so the elementary definition cannot be used here and one must work with conditional densities instead",
+   "Misreading \"conditional probability is a probability law\" as \"conditional probability and the original law are interchangeable\": P(A | B) and P(A) belong to two different laws, and mixing them yields contradictory results"
+  ],
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "Without looking at any notes, write out the full derivation chain of \"why conditional probability is a new probability law\": from the irreducible premises to the conclusion, doing exactly one thing per step, and naming the assumption each step relies on.",
+    "grading_key": [
+     "Discard the part of A that does not lie inside B, so that only A ∩ B remains possible",
+     "The total remaining probability is then P(B), not 1, so the normalization axiom is violated",
+     "Renormalize by dividing through by P(B), which gives P(B | B) = 1 and restores normalization",
+     "P(B) > 0, otherwise the denominator of the defining formula is zero"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "Under what circumstances does \"why conditional probability is a new probability law\" fail? Give a concrete counterexample (with numbers or an explicit setup) and state which assumption is violated.",
+    "grading_key": [
+     "When P(B) = 0, P(A | B) is undefined; single-point events for continuous random variables have probability zero, so the elementary definition cannot be used here and one must work with conditional densities instead",
+     "P(B) > 0, otherwise the denominator of the defining formula is zero",
+     "B is a fixed event; once B changes you are working with a different probability law, and the two must not be mixed"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "The following argument contains one error; identify which step is wrong and explain why: \"Since the original probability law P is already defined on the sample space Ω and satisfies the three axioms of nonnegativity, normalization, and additivity, \"why conditional probability is a new probability law\" holds; and since it holds, the conclusion remains valid even if \"P(B) > 0, otherwise the denominator of the defining formula is zero\" is not satisfied.\"",
+    "grading_key": [
+     "Identify the assumption that was quietly relaxed: P(B) > 0, otherwise the denominator of the defining formula is zero",
+     "Explain which step of the derivation collapses first once this assumption fails",
+     "When P(B) = 0, P(A | B) is undefined; single-point events for continuous random variables have probability zero, so the elementary definition cannot be used here and one must work with conditional densities instead"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "Use \"why conditional probability is a new probability law\" to explain one decision in a real setting you are working on (cloud customer usage forecasting / recruiting conversion funnel / sales lead scoring), and state where this principle would break down in that setting.",
+    "grading_key": [
+     "A concrete decision is identified",
+     "The mapping is isomorphic",
+     "The failure condition in that setting is identified"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  },
+  "consecutive_lapses": 0,
+  "needs_human_confirm": false,
+  "created_at": "2026-09-12T12:52:45+00:00"
+ },
+ {
+  "id": "A0003",
+  "title": "Why independence（獨立性）is defined by the product form rather than by P(A | B) = P(A)",
+  "salience": 10,
+  "source_name": "6.431x Unit 2｜Bertsekas & Tsitsiklis 1.3–1.5",
+  "source_quote": "Two events A and B are said to be independent if P(A ∩ B) = P(A)P(B). If in addition, P(B) > 0, independence is equivalent to the condition P(A | B) = P(A).",
+  "irreducible_premises": [
+   "The intuition independence is meant to capture is that the occurrence of B does not change our assessment of A",
+   "The conditional form P(A | B) = P(A) is only meaningful when P(B) > 0",
+   "The product form P(A ∩ B) = P(A)P(B) is meaningful in every case"
+  ],
+  "derivation_chain": [
+   "If the conditional form were taken as the definition, events with P(B) = 0 could not be classified as independent or not, leaving a gap in the definition",
+   "The product form is fully symmetric in A and B, so there is no need to specify which event is conditioned on which",
+   "When P(B) > 0, dividing both sides of the product form by P(B) recovers P(A | B) = P(A), so the two are equivalent",
+   "Hence the product form is a strictly more general definition, and it delivers symmetry for free",
+   "Start from the informative statement P(B|A) = P(B), using the premise that this is the intended meaning of independence.",
+   "Substitute it into the multiplication rule P(A∩B) = P(A)P(B|A), which requires P(A) > 0, to obtain P(A∩B) = P(A)P(B) — this is the handwritten chain P(A∩B)=P(A)P(B|A)=P(A)P(B) on the slide.",
+   "Promote the product form to the definition, using the premise that the product is defined for all events: it needs no positivity and is symmetric in A and B, so P(A|B) = P(A) follows for free whenever P(B) > 0.",
+   "Apply the nonnegativity premise to the slide's disjoint picture: A and B disjoint with P(A) > 0 and P(B) > 0 give P(A∩B) = 0 while P(A)P(B) > 0, so disjointness is the opposite of independence rather than a version of it."
+  ],
+  "assumptions": [
+   "The equivalence holds only when P(B) > 0; the product form itself requires no assumption that any probability be positive",
+   "A and B are events in a single, fixed probability model with one probability law",
+   "The conditional form is used only as motivation; all formal work uses the product form",
+   "Independence is a property of the assigned probabilities, not of any physical or causal mechanism"
+  ],
+  "failure_modes": [
+   "Mistaking mutual exclusivity for independence: if A and B are mutually exclusive with positive probabilities, then P(A ∩ B) = 0 ≠ P(A)P(B), so mutual exclusivity is in fact the strongest form of dependence",
+   "Using \"there is no actual causal link\" as the test for independence: independence is a numerical condition on the probability law and has nothing to do with the presence or absence of physical causation",
+   "Treating 'A and B cannot happen together' as independence: for disjoint events with positive probability, P(A∩B)=0 but P(A)P(B)>0, so the product rule fails by exactly P(A)P(B) — the slide answers 'Independent?' with P(A∩B)=0 vs P(A)P(B)>0.",
+   "Using P(B|A)=P(B) as the definition when P(A)=0: the conditional is undefined and the test cannot be run, while the product form is satisfied trivially since both sides are 0.",
+   "Reading independence as causal or physical separateness: two events driven by the same source can still satisfy the product rule numerically, and two mechanically unrelated events can fail it, so any argument from 'unrelated mechanisms' can give the wrong answer."
+  ],
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "Without looking at any notes, write out the full derivation chain of \"why independence is defined by the product form rather than by P(A | B) = P(A)\": from the irreducible premises to the conclusion, doing exactly one thing per step, and naming the assumption each step relies on.",
+    "grading_key": [
+     "If the conditional form were taken as the definition, events with P(B) = 0 could not be classified as independent or not, leaving a gap in the definition",
+     "The product form is fully symmetric in A and B, so there is no need to specify which event is conditioned on which",
+     "When P(B) > 0, dividing both sides of the product form by P(B) recovers P(A | B) = P(A), so the two are equivalent",
+     "The equivalence holds only when P(B) > 0; the product form itself requires no assumption that any probability be positive"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "Under what circumstances does \"why independence is defined by the product form rather than by P(A | B) = P(A)\" fail? Give a concrete counterexample (with numbers or an explicit setup) and state which assumption is violated.",
+    "grading_key": [
+     "Mistaking mutual exclusivity for independence: if A and B are mutually exclusive with positive probabilities, then P(A ∩ B) = 0 ≠ P(A)P(B), so mutual exclusivity is in fact the strongest form of dependence",
+     "The equivalence holds only when P(B) > 0; the product form itself requires no assumption that any probability be positive"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "The following argument contains one error; identify which step is wrong and explain why: \"Since the intuition independence is meant to capture is that the occurrence of B does not change our assessment of A, \"why independence is defined by the product form rather than by P(A | B) = P(A)\" holds; and since it holds, the conclusion remains valid even if \"the equivalence holds only when P(B) > 0; the product form itself requires no assumption that any probability be positive\" is not satisfied.\"",
+    "grading_key": [
+     "Identify the assumption that was quietly relaxed: the equivalence holds only when P(B) > 0; the product form itself requires no assumption that any probability be positive",
+     "Explain which step of the derivation collapses first once this assumption fails",
+     "Mistaking mutual exclusivity for independence: if A and B are mutually exclusive with positive probabilities, then P(A ∩ B) = 0 ≠ P(A)P(B), so mutual exclusivity is in fact the strongest form of dependence"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "Use \"why independence is defined by the product form rather than by P(A | B) = P(A)\" to explain one decision in a real setting you are working on (cloud customer usage forecasting / recruiting conversion funnel / sales lead scoring), and state where this principle would break down in that setting.",
+    "grading_key": [
+     "A concrete decision is identified",
+     "The mapping is isomorphic",
+     "The failure condition in that setting is identified"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  },
+  "consecutive_lapses": 0,
+  "needs_human_confirm": true,
+  "created_at": "2026-09-12T12:52:45+00:00",
+  "merged_sources": [
+   "6.431x Unit 2｜L3 annotated slides"
+  ]
+ },
+ {
+  "id": "A0004",
+  "title": "Independence and conditional independence（條件獨立性）do not imply each other",
+  "salience": 9,
+  "source_name": "6.431x Unit 2｜Bertsekas & Tsitsiklis 1.3–1.5",
+  "source_quote": "Independence does not imply conditional independence, and vice versa.",
+  "irreducible_premises": [
+   "Conditional independence is defined as independence under the probability law P(· | C): P(A ∩ B | C) = P(A | C)P(B | C)",
+   "Independence is a property relative to one particular probability law",
+   "Changing what you condition on changes the law"
+  ],
+  "derivation_chain": [
+   "Independence is a numerical identity that holds under the law P, while conditional independence is an identity under the law P(· | C); the two live in different laws",
+   "Since these are two different laws, one holding is no reason for the other to hold, and both directions must be settled by counterexample",
+   "Counterexample (independent but not conditionally independent): two biased coins with P(H | coin A) = 0.9 and P(H | coin B) = 0.1; pick one coin at random with equal probability and then toss it repeatedly. When you do not know which coin was picked, the tosses are dependent (ten heads in a row sharply raises the probability that the next toss is heads), but given the identity of the coin the tosses are independent",
+   "Conclusion: conditioning can create dependence, and it can also remove dependence",
+   "Substitute P(·|C) for P(·) in the product-form definition, using the premise that independence is relative to a law: A ⟂ B given C means P(A∩B|C) = P(A|C)P(B|C).",
+   "Note that this identity and the unconditional identity P(A∩B) = P(A)P(B) are statements about different laws, so by the rescaling premise neither implies the other.",
+   "Exhibit destruction with the slide's Venn picture: A and B independent unconditionally, but inside C the two shaded pieces of A and B no longer overlap in the same proportion, so P(A∩B|C) ≠ P(A|C)P(B|C).",
+   "Exhibit creation with the two-coin model on p06: tosses of the same unknown coin are dependent unconditionally, yet given the identity of the coin the tosses are independent — the annotation 'given a coin: independent tosses'.",
+   "Quantify the dependence by total probability: P(toss 11 = H) = P(A)P(H₁₁|A) + P(B)P(H₁₁|B) = 0.5·0.9 + 0.5·0.1 = 0.5, whereas P(toss 11 = H | first 10 tosses heads) ≈ P(H₁₁|A) = 0.9."
+  ],
+  "assumptions": [
+   "P(C) > 0, otherwise P(· | C) is undefined",
+   "P(C) > 0 so that the conditional law exists",
+   "The conditioning variable is the same for both events in the pair",
+   "The mixture over the unobserved coin is nondegenerate — the two conditional coin biases differ"
+  ],
+  "failure_modes": [
+   "Wrongly assuming marginal independence in a mixture model (first draw a parameter, then draw the observations): this is exactly the source of error in Bayesian inference when observations are treated as independent samples",
+   "The reverse misuse: independence given C does not imply marginal independence",
+   "Assuming unconditional independence survives conditioning: in the slide's Venn diagram A and B are independent but disjoint inside C, so P(A∩B|C) = 0 while P(A|C)P(B|C) > 0 — the product rule fails by the whole of P(A|C)P(B|C).",
+   "Assuming conditional independence implies unconditional independence: in the two-coin model tosses are conditionally independent given the coin, yet observing 10 heads moves the eleventh-toss probability from 0.5 to about 0.9, an error of 0.4 in absolute probability from treating tosses as unconditionally independent.",
+   "Conditioning on a set that mixes regimes: if C is a union of sub-cases with different conditional biases, the conditional law is again a mixture and the product form fails even though it holds inside each sub-case."
+  ],
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "Without looking at any notes, write out the full derivation chain of \"independence and conditional independence do not imply each other\": from the irreducible premises to the conclusion, doing exactly one thing per step, and naming the assumption each step relies on.",
+    "grading_key": [
+     "Independence is a numerical identity that holds under the law P, while conditional independence is an identity under the law P(· | C); the two live in different laws",
+     "Since these are two different laws, one holding is no reason for the other to hold, and both directions must be settled by counterexample",
+     "Counterexample (independent but not conditionally independent): two biased coins with P(H | coin A) = 0.9 and P(H | coin B) = 0.1; pick one coin at random with equal probability and then toss it repeatedly. When you do not know which coin was picked, the tosses are dependent (ten heads in a row sharply raises the probability that the next toss is heads), but given the identity of the coin the tosses are independent",
+     "P(C) > 0, otherwise P(· | C) is undefined"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "Under what circumstances does \"independence and conditional independence do not imply each other\" fail? Give a concrete counterexample (with numbers or an explicit setup) and state which assumption is violated.",
+    "grading_key": [
+     "Wrongly assuming marginal independence in a mixture model (first draw a parameter, then draw the observations): this is exactly the source of error in Bayesian inference when observations are treated as independent samples",
+     "P(C) > 0, otherwise P(· | C) is undefined"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "The following argument contains one error; identify which step is wrong and explain why: \"Since conditional independence is defined as independence under the probability law P(· | C), namely P(A ∩ B | C) = P(A | C)P(B | C), \"independence and conditional independence do not imply each other\" holds; and since it holds, the conclusion remains valid even if \"P(C) > 0, otherwise P(· | C) is undefined\" is not satisfied.\"",
+    "grading_key": [
+     "Identify the assumption that was quietly relaxed: P(C) > 0, otherwise P(· | C) is undefined",
+     "Explain which step of the derivation collapses first once this assumption fails",
+     "Wrongly assuming marginal independence in a mixture model (first draw a parameter, then draw the observations): this is exactly the source of error in Bayesian inference when observations are treated as independent samples"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "Use \"independence and conditional independence do not imply each other\" to explain one decision in a real setting you are working on (cloud customer usage forecasting / recruiting conversion funnel / sales lead scoring), and state where this principle would break down in that setting.",
+    "grading_key": [
+     "A concrete decision is identified",
+     "The mapping is isomorphic",
+     "The failure condition in that setting is identified"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  },
+  "consecutive_lapses": 0,
+  "needs_human_confirm": true,
+  "created_at": "2026-09-12T12:52:45+00:00",
+  "merged_sources": [
+   "6.431x Unit 2｜L3 annotated slides"
+  ]
+ },
+ {
+  "id": "A0005",
+  "title": "Independence of several events（多事件獨立）must hold for every subset",
+  "salience": 8,
+  "source_name": "6.431x Unit 2｜Bertsekas & Tsitsiklis 1.3–1.5",
+  "source_quote": "We say that the events A1 , A2 , . . . , An are independent if P( ∩ i∈S Ai ) = Π i∈S P(Ai ), for every subset S of {1, 2, . . . , n}.",
+  "irreducible_premises": [
+   "The definition requires the identity to hold for every subset S of {1, …, n}, not merely for pairs",
+   "There are 2ⁿ subsets, so the number of conditions grows exponentially in n"
+  ],
+  "derivation_chain": [
+   "Pairwise independence constrains only the subsets of size 2 and imposes no constraint at all on subsets of size 3 or more",
+   "Hence there exist probability laws in which the events are pairwise independent but the three of them are not independent; pairwise independence is a strictly weaker condition",
+   "Counterexample: toss two fair coins and let A = the first is heads, B = the second is heads, C = the two outcomes agree. The three events are pairwise independent, yet P(A ∩ B ∩ C) = 1/4 ≠ 1/8 = P(A)P(B)P(C)",
+   "So to use the word \"independent\" you must check every subset, or guarantee it directly from the construction of the model (the experiments being physically separate)"
+  ],
+  "assumptions": [
+   "No additional positivity requirement; the definition is purely a product identity"
+  ],
+  "failure_modes": [
+   "Misusing pairwise independence to multiply out a system failure probability in reliability calculations systematically understates the risk from common-cause failures (shared power supply, shared data center, shared supplier)"
+  ],
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "Without looking at any notes, write out the full derivation chain of \"independence of several events must hold for every subset\": from the irreducible premises to the conclusion, doing exactly one thing per step, and naming the assumption each step relies on.",
+    "grading_key": [
+     "Pairwise independence constrains only the subsets of size 2 and imposes no constraint at all on subsets of size 3 or more",
+     "Hence there exist probability laws in which the events are pairwise independent but the three of them are not independent; pairwise independence is a strictly weaker condition",
+     "Counterexample: toss two fair coins and let A = the first is heads, B = the second is heads, C = the two outcomes agree. The three events are pairwise independent, yet P(A ∩ B ∩ C) = 1/4 ≠ 1/8 = P(A)P(B)P(C)",
+     "No additional positivity requirement; the definition is purely a product identity"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "Under what circumstances does \"independence of several events must hold for every subset\" fail? Give a concrete counterexample (with numbers or an explicit setup) and state which assumption is violated.",
+    "grading_key": [
+     "Misusing pairwise independence to multiply out a system failure probability in reliability calculations systematically understates the risk from common-cause failures (shared power supply, shared data center, shared supplier)",
+     "No additional positivity requirement; the definition is purely a product identity"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "The following argument contains one error; identify which step is wrong and explain why: \"Since the definition requires the identity to hold for every subset S of {1, …, n} and not merely for pairs, \"independence of several events must hold for every subset\" holds; and since it holds, the conclusion remains valid even if \"no additional positivity requirement; the definition is purely a product identity\" is not satisfied.\"",
+    "grading_key": [
+     "Identify the assumption that was quietly relaxed: no additional positivity requirement; the definition is purely a product identity",
+     "Explain which step of the derivation collapses first once this assumption fails",
+     "Misusing pairwise independence to multiply out a system failure probability in reliability calculations systematically understates the risk from common-cause failures (shared power supply, shared data center, shared supplier)"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "Use \"independence of several events must hold for every subset\" to explain one decision in a real setting you are working on (cloud customer usage forecasting / recruiting conversion funnel / sales lead scoring), and state where this principle would break down in that setting.",
+    "grading_key": [
+     "A concrete decision is identified",
+     "The mapping is isomorphic",
+     "The failure condition in that setting is identified"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  },
+  "consecutive_lapses": 0,
+  "needs_human_confirm": true,
+  "created_at": "2026-09-12T12:52:45+00:00"
+ },
+ {
+  "id": "A0006",
+  "title": "Independence is closed under complements（補事件）",
+  "salience": 8,
+  "source_name": "6.431x Unit 2｜Bertsekas & Tsitsiklis 1.3–1.5",
+  "source_quote": "If A and B are independent, so are A and B c .",
+  "irreducible_premises": [
+   "A splits into the two mutually exclusive pieces (A ∩ B) and (A ∩ Bᶜ)",
+   "P(A ∩ B) = P(A)P(B) holds"
+  ],
+  "derivation_chain": [
+   "By additivity, P(A ∩ Bᶜ) = P(A) − P(A ∩ B)",
+   "Substituting the independence condition gives P(A) − P(A)P(B) = P(A)(1 − P(B))",
+   "Since 1 − P(B) = P(Bᶜ), we get P(A ∩ Bᶜ) = P(A)P(Bᶜ), that is, A and Bᶜ are independent",
+   "Intuitive version: if the occurrence of B carries no information about A, then the non-occurrence of B carries no information either",
+   "Decompose A into the two disjoint pieces A∩B and A∩Bᶜ, using the splitting premise.",
+   "Apply finite additivity: P(A) = P(A∩B) + P(A∩Bᶜ).",
+   "Substitute the independence hypothesis P(A∩B) = P(A)P(B) and solve for the remaining piece: P(A∩Bᶜ) = P(A) − P(A)P(B).",
+   "Factor P(A) out and apply the complement rule: P(A∩Bᶜ) = P(A)(1 − P(B)) = P(A)P(Bᶜ), which is the product form for A and Bᶜ."
+  ],
+  "assumptions": [
+   "Only the independence of A and B is needed; no assumption that any probability be positive is required",
+   "A and B are independent under the same law used to evaluate the complement",
+   "The complement Bᶜ is taken inside the same sample space Ω",
+   "Only two events are involved; no claim about complements inside larger collections is made here"
+  ],
+  "failure_modes": [
+   "This property does not extend to \"A independent of B and A independent of C ⇒ A independent of B ∪ C\"; the latter requires additional conditions",
+   "Complementing under a different law: if the independence was only conditional independence given C, the algebra runs inside P(·|C) and yields P(A∩Bᶜ|C)=P(A|C)P(Bᶜ|C), which says nothing about the unconditional pair — the conclusion is silently attached to the wrong probability law.",
+   "Extending the same one-line argument to a collection assumed only pairwise independent: the substitution step needs the product identity for the exact intersection being split, and pairwise independence does not supply the three-way identity, so the derivation stalls at P(A₁∩A₂∩A₃ᶜ).",
+   "Applying it to disjointness instead of independence: if A and B are disjoint, A∩Bᶜ = A, and P(A) = P(A)P(Bᶜ) forces P(Bᶜ)=1, i.e. P(B)=0 — so the 'closure' conclusion is false for anything but genuine product-form independence."
+  ],
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "Without looking at any notes, write out the full derivation chain of \"independence is closed under complements\": from the irreducible premises to the conclusion, doing exactly one thing per step, and naming the assumption each step relies on.",
+    "grading_key": [
+     "By additivity, P(A ∩ Bᶜ) = P(A) − P(A ∩ B)",
+     "Substituting the independence condition gives P(A) − P(A)P(B) = P(A)(1 − P(B))",
+     "Since 1 − P(B) = P(Bᶜ), we get P(A ∩ Bᶜ) = P(A)P(Bᶜ), that is, A and Bᶜ are independent",
+     "Only the independence of A and B is needed; no assumption that any probability be positive is required"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "Under what circumstances does \"independence is closed under complements\" fail? Give a concrete counterexample (with numbers or an explicit setup) and state which assumption is violated.",
+    "grading_key": [
+     "This property does not extend to \"A independent of B and A independent of C ⇒ A independent of B ∪ C\"; the latter requires additional conditions",
+     "Only the independence of A and B is needed; no assumption that any probability be positive is required"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "The following argument contains one error; identify which step is wrong and explain why: \"Since A splits into the two mutually exclusive pieces (A ∩ B) and (A ∩ Bᶜ), \"independence is closed under complements\" holds; and since it holds, the conclusion remains valid even if \"only the independence of A and B is needed; no assumption that any probability be positive is required\" is not satisfied.\"",
+    "grading_key": [
+     "Identify the assumption that was quietly relaxed: only the independence of A and B is needed; no assumption that any probability be positive is required",
+     "Explain which step of the derivation collapses first once this assumption fails",
+     "This property does not extend to \"A independent of B and A independent of C ⇒ A independent of B ∪ C\"; the latter requires additional conditions"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "Use \"independence is closed under complements\" to explain one decision in a real setting you are working on (cloud customer usage forecasting / recruiting conversion funnel / sales lead scoring), and state where this principle would break down in that setting.",
+    "grading_key": [
+     "A concrete decision is identified",
+     "The mapping is isomorphic",
+     "The failure condition in that setting is identified"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  },
+  "consecutive_lapses": 0,
+  "needs_human_confirm": true,
+  "created_at": "2026-09-12T12:52:45+00:00",
+  "merged_sources": [
+   "6.431x Unit 2｜L3 annotated slides"
+  ]
+ },
+ {
+  "id": "A0007",
+  "title": "With finitely many equally likely outcomes（等可能結果）, conditional probability reduces to a ratio of counts",
+  "salience": 6,
+  "source_name": "6.431x Unit 2｜Bertsekas & Tsitsiklis 1.3–1.5",
+  "source_quote": "If the possible outcomes are finitely many and equally likely, then P(A | B) = number of elements of A ∩ B / number of elements of B.",
+  "irreducible_premises": [
+   "The sample space is a finite set",
+   "Every outcome has the same probability, equal to 1/|Ω|"
+  ],
+  "derivation_chain": [
+   "Under the equally likely assumption, P(A ∩ B) = |A ∩ B| / |Ω| and P(B) = |B| / |Ω|",
+   "Substituting into the defining formula, |Ω| appears in both numerator and denominator and cancels",
+   "Conditional probability therefore becomes a plain ratio of counts: you only need to count elements inside the new universe B"
+  ],
+  "assumptions": [
+   "Finiteness and equal likelihood. Equal likelihood is not a law of nature; it is a modeling choice"
+  ],
+  "failure_modes": [
+   "When equal likelihood fails, the ratio of counts gives the wrong answer: the 11 possible sums of two dice are not equally likely, so counting proportions directly is incorrect"
+  ],
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "Without looking at any notes, write out the full derivation chain of \"with finitely many equally likely outcomes, conditional probability reduces to a ratio of counts\": from the irreducible premises to the conclusion, doing exactly one thing per step, and naming the assumption each step relies on.",
+    "grading_key": [
+     "Under the equally likely assumption, P(A ∩ B) = |A ∩ B| / |Ω| and P(B) = |B| / |Ω|",
+     "Substituting into the defining formula, |Ω| appears in both numerator and denominator and cancels",
+     "Conditional probability therefore becomes a plain ratio of counts: you only need to count elements inside the new universe B",
+     "Finiteness and equal likelihood. Equal likelihood is not a law of nature; it is a modeling choice"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "Under what circumstances does \"with finitely many equally likely outcomes, conditional probability reduces to a ratio of counts\" fail? Give a concrete counterexample (with numbers or an explicit setup) and state which assumption is violated.",
+    "grading_key": [
+     "When equal likelihood fails, the ratio of counts gives the wrong answer: the 11 possible sums of two dice are not equally likely, so counting proportions directly is incorrect",
+     "Finiteness and equal likelihood. Equal likelihood is not a law of nature; it is a modeling choice"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "The following argument contains one error; identify which step is wrong and explain why: \"Since the sample space is a finite set, \"with finitely many equally likely outcomes, conditional probability reduces to a ratio of counts\" holds; and since it holds, the conclusion remains valid even if \"finiteness and equal likelihood; equal likelihood is not a law of nature, it is a modeling choice\" is not satisfied.\"",
+    "grading_key": [
+     "Identify the assumption that was quietly relaxed: finiteness and equal likelihood. Equal likelihood is not a law of nature; it is a modeling choice",
+     "Explain which step of the derivation collapses first once this assumption fails",
+     "When equal likelihood fails, the ratio of counts gives the wrong answer: the 11 possible sums of two dice are not equally likely, so counting proportions directly is incorrect"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "Use \"with finitely many equally likely outcomes, conditional probability reduces to a ratio of counts\" to explain one decision in a real setting you are working on (cloud customer usage forecasting / recruiting conversion funnel / sales lead scoring), and state where this principle would break down in that setting.",
+    "grading_key": [
+     "A concrete decision is identified",
+     "The mapping is isomorphic",
+     "The failure condition in that setting is identified"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  },
+  "consecutive_lapses": 0,
+  "needs_human_confirm": false,
+  "created_at": "2026-09-12T12:52:45+00:00"
+ },
+ {
+  "id": "A0008",
+  "source_name": "6.431x Unit 1｜L1 annotated slides",
+  "created_at": "2026-09-13T05:19:48+00:00",
+  "title": "Probability is an axiom-constrained assignment to events（事件）, i.e. to subsets of the sample space, never to outcomes directly",
+  "source_quote": "Event: a subset of the sample space – Probability is assigned to events • Axioms: – Nonnegativity: P(A) ≥ 0 – Normalization: P(Ω) = 1 – (Finite) additivity: (to be strengthened later) If A ∩ B = ∅, then P(A ∪ B) = P(A) + P(B) (slide p06)",
+  "salience": 10,
+  "irreducible_premises": [
+   "A sample space Ω is given, and events are defined as subsets of Ω",
+   "Nonnegativity: P(A) ≥ 0 for every event A",
+   "Normalization: P(Ω) = 1",
+   "Additivity: disjoint events have additive probabilities",
+   "Singletons {s} are themselves subsets, so outcome probabilities are a special case of event probabilities, not a separate primitive"
+  ],
+  "derivation_chain": [
+   "Take Ω as given and define an event as any subset of Ω, so the domain of P is a collection of sets rather than of points.",
+   "Impose nonnegativity and normalization, which together bound P between 0 and 1 on that domain by fixing the total mass at 1.",
+   "Impose additivity on disjoint events, which is a statement about set operations — union and intersection — and therefore only makes sense on a set-valued domain.",
+   "Note that the probability of an individual outcome s is recovered as P({s}), the singleton subset, so nothing is lost by making events primary.",
+   "Conclude that the axioms constrain a set function, and any 'probability of an outcome' is derived from it — which is what allows the same axioms to cover continuous Ω where singletons carry no mass."
+  ],
+  "assumptions": [
+   "The collection of events is closed under the union and complement operations used in the axioms",
+   "Only the three axioms are assumed — no interpretation of P as frequency or belief is required for the mathematics"
+  ],
+  "failure_modes": [
+   "If the axioms are stated for outcomes instead of events, the framework breaks on continuous Ω such as the unit square, where every singleton has probability 0 and outcome probabilities carry no information at all.",
+   "If additivity is applied to non-disjoint events, P(A ∪ B) = P(A) + P(B) overstates the truth by exactly P(A ∩ B), which is why the correct identity is P(A ∪ B) = P(A) + P(B) − P(A ∩ B).",
+   "If probabilities are assigned to 'very strange' subsets of the unit square, no consistent area-based assignment exists, and the event collection must be restricted for P to be well defined."
+  ],
+  "needs_human_confirm": false,
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "不看任何筆記，寫出「Probability is an axiom-constrained assignment to events（事件）, i.e. to subsets of the sample space, never to outcomes directly」的完整推導鏈：從不可再約前提到結論，每一步只做一件事，並標明每一步用到哪個假設。",
+    "grading_key": [
+     "Take Ω as given and define an event as any subset of Ω, so the domain of P is a collection of sets rather than of points.",
+     "Impose nonnegativity and normalization, which together bound P between 0 and 1 on that domain by fixing the total mass at 1.",
+     "Impose additivity on disjoint events, which is a statement about set operations — union and intersection — and therefore only makes sense on a set-valued domain.",
+     "The collection of events is closed under the union and complement operations used in the axioms"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "「Probability is an axiom-constrained assignment to events（事件）, i.e. to subsets of the sample space, never to outcomes directly」在什麼情況下不成立？給一個具體反例（要有數字或明確設定），並說明是哪一條假設被破壞。",
+    "grading_key": [
+     "If the axioms are stated for outcomes instead of events, the framework breaks on continuous Ω such as the unit square, where every singleton has probability 0 and outcome probabilities carry no information at all.",
+     "The collection of events is closed under the union and complement operations used in the axioms",
+     "Only the three axioms are assumed — no interpretation of P as frequency or belief is required for the mathematics"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "以下推理有一處錯，指出錯在哪一步並說明理由：「既然A sample space Ω is given, and events are defined as subsets of Ω，因此「Probability is an axiom-constrained assignment to events（事件）, i.e. to subsets of the sample space, never to outcomes directly」成立；既然它成立，那麼就算不滿足「The collection of events is closed under the union and compl…」，結論也照樣成立。」",
+    "grading_key": [
+     "指出被偷偷放寬的假設：The collection of events is closed under the union and compl…",
+     "說明這條假設失效後，推導的哪一步最先塌",
+     "If the axioms are stated for outcomes instead of events, the framework…"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "用「Probability is an axiom-constrained assignment to events（事件）, i.e. to subsets of the sample space, never to outcomes directly」解釋你手上一個真實場景（雲端客戶用量預測／招募轉化漏斗／銷售線索評分）中的一個決策，並說出這個原理在該場景會在哪裡失效。",
+    "grading_key": [
+     "有具體決策",
+     "映射關係同構",
+     "指出場景中的失效條件"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "consecutive_lapses": 0,
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  }
+ },
+ {
+  "id": "A0009",
+  "source_name": "6.431x Unit 1｜L1 annotated slides",
+  "created_at": "2026-09-13T05:19:48+00:00",
+  "title": "Countable additivity（可數可加性）must be assumed as a strengthened axiom because finite additivity cannot reach infinite unions",
+  "source_quote": "Countable additivity axiom • Strengthens the finite additivity axiom. Countable Additivity Axiom: If A₁, A₂, A₃,… is an infinite sequence of disjoint events, then P(A₁ ∪ A₂ ∪ A₃ ∪ ⋯) = P(A₁) + P(A₂) + P(A₃) + ⋯ (slide p17)",
+  "salience": 10,
+  "irreducible_premises": [
+   "Finite additivity holds for any finite collection of disjoint events",
+   "Finite additivity extended by induction reaches only finitely many events, never a completed infinite union",
+   "Some sample spaces are countably infinite, e.g. Ω = {1, 2, …}",
+   "Events of interest in such spaces, e.g. 'the outcome is even', are infinite unions of singletons",
+   "The axioms are the only permitted source of computational rules"
+  ],
+  "derivation_chain": [
+   "Take Ω = {1, 2, …} with P(n) = 1/2ⁿ and ask for P(outcome is even), an event that equals {2} ∪ {4} ∪ {6} ∪ ⋯.",
+   "Attempt the computation with finite additivity only: induction gives the sum over any finite prefix, but no finite number of steps exhausts the union, so the axiom yields no value for the event.",
+   "Therefore postulate countable additivity: for an infinite sequence of disjoint events the probability of the union equals the infinite series of probabilities.",
+   "With that axiom, P(even) = P(2) + P(4) + P(6) + ⋯ = 1/2² + 1/2⁴ + 1/2⁶ + ⋯ = (1/4)·(1/(1−1/4)) = 1/3, and the same axiom verifies normalization Σ 1/2ⁿ = 1.",
+   "Conclude that countable additivity is logically stronger than finite additivity and is what makes discrete infinite models computable at all."
+  ],
+  "assumptions": [
+   "The events can be arranged as a sequence indexed by the natural numbers and are pairwise disjoint",
+   "The resulting infinite series converges, which normalization guarantees for probabilities"
+  ],
+  "failure_modes": [
+   "If only finite additivity is assumed, P(outcome is even) in the 1/2ⁿ model is simply undefined — every finite truncation gives a strict underestimate of 1/3, and the error is the unsummed tail.",
+   "If the events are not pairwise disjoint the series overcounts overlaps, so the additive equality becomes an inequality P(∪Aᵢ) ≤ ΣP(Aᵢ) — the union bound rather than an identity.",
+   "If the collection cannot be arranged in a sequence — i.e. it is uncountable — the axiom does not apply at all, and applying it anyway yields the contradiction 1 = Σ 0 = 0."
+  ],
+  "needs_human_confirm": false,
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "不看任何筆記，寫出「Countable additivity（可數可加性）must be assumed as a strengthened axiom because finite additivity cannot reach infinite unions」的完整推導鏈：從不可再約前提到結論，每一步只做一件事，並標明每一步用到哪個假設。",
+    "grading_key": [
+     "Take Ω = {1, 2, …} with P(n) = 1/2ⁿ and ask for P(outcome is even), an event that equals {2} ∪ {4} ∪ {6} ∪ ⋯.",
+     "Attempt the computation with finite additivity only: induction gives the sum over any finite prefix, but no finite number of steps exhausts the union, so the axiom yields no value for the event.",
+     "Therefore postulate countable additivity: for an infinite sequence of disjoint events the probability of the union equals the infinite series of probabilities.",
+     "The events can be arranged as a sequence indexed by the natural numbers and are pairwise disjoint"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "「Countable additivity（可數可加性）must be assumed as a strengthened axiom because finite additivity cannot reach infinite unions」在什麼情況下不成立？給一個具體反例（要有數字或明確設定），並說明是哪一條假設被破壞。",
+    "grading_key": [
+     "If only finite additivity is assumed, P(outcome is even) in the 1/2ⁿ model is simply undefined — every finite truncation gives a strict underestimate of 1/3, and the error is the unsummed tail.",
+     "The events can be arranged as a sequence indexed by the natural numbers and are pairwise disjoint",
+     "The resulting infinite series converges, which normalization guarantees for probabilities"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "以下推理有一處錯，指出錯在哪一步並說明理由：「既然Finite additivity holds for any finite collection of disjoint events，因此「Countable additivity（可數可加性）must be assumed as a strengthened axiom because finite additivity cannot reach infinite unions」成立；既然它成立，那麼就算不滿足「The events can be arranged as a sequence indexed by the natu…」，結論也照樣成立。」",
+    "grading_key": [
+     "指出被偷偷放寬的假設：The events can be arranged as a sequence indexed by the natu…",
+     "說明這條假設失效後，推導的哪一步最先塌",
+     "If only finite additivity is assumed, P(outcome is even) in the 1/2ⁿ m…"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "用「Countable additivity（可數可加性）must be assumed as a strengthened axiom because finite additivity cannot reach infinite unions」解釋你手上一個真實場景（雲端客戶用量預測／招募轉化漏斗／銷售線索評分）中的一個決策，並說出這個原理在該場景會在哪裡失效。",
+    "grading_key": [
+     "有具體決策",
+     "映射關係同構",
+     "指出場景中的失效條件"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "consecutive_lapses": 0,
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  }
+ },
+ {
+  "id": "A0010",
+  "source_name": "6.431x Unit 1｜L1 annotated slides",
+  "created_at": "2026-09-13T05:19:48+00:00",
+  "title": "In a continuous sample space（連續樣本空間）each individual outcome must have probability zero, and additivity must be withheld from uncountable collections to avoid contradiction",
+  "source_quote": "Additivity holds only for \"countable\" sequences of events • The unit square (simlarly, the real line, etc.) is not countable (its elements cannot be arranged in a sequence) • \"Area\" is a legitimate probability law on the unit square, as long as we do not try to assign probabilities/areas to \"very strange\" sets. [handwritten annotation] 1 = P(Ω) = P(∪{(x,y)}) =? Σ P({(x,y)}) = Σ 0 = 0 (slide p18)",
+  "salience": 10,
+  "irreducible_premises": [
+   "Ω is the unit square with the uniform law, where probability equals area",
+   "A single point has zero area, hence P({(x,y)}) = 0 for every outcome",
+   "Normalization requires P(Ω) = 1",
+   "The unit square is uncountable: its elements cannot be arranged in a sequence",
+   "The additivity axiom is stated only for countable sequences of disjoint events"
+  ],
+  "derivation_chain": [
+   "Under the uniform law, probability equals area, so the single point {(0.5, 0.3)} has probability equal to its area, which is 0.",
+   "Write Ω as the union of all its singletons; these are pairwise disjoint and their union is exactly Ω, so normalization demands the total be 1.",
+   "Apply additivity to that union as if it were legitimate: 1 = P(Ω) = Σ P({(x,y)}) = Σ 0 = 0, an outright contradiction.",
+   "Locate the illegal step using the premise that additivity is granted only for countable sequences, and the unit square is not countable — so the decomposition is not covered by the axiom.",
+   "Conclude both results: individual outcomes must carry zero probability in a continuous space, and area remains a legitimate probability law precisely because additivity is never extended to uncountable unions or to pathological sets."
+  ],
+  "assumptions": [
+   "Probability on the unit square is the uniform (area) law, so events of positive probability are exactly those of positive area",
+   "The event collection excludes non-measurable, 'very strange' sets to which no consistent area can be assigned"
+  ],
+  "failure_modes": [
+   "If additivity is applied to the uncountable family of singletons, the computation returns P(Ω) = 0 while normalization demands 1, so the model is inconsistent by a full unit of probability.",
+   "If zero probability is read as impossibility, the reasoning collapses: every point of the unit square has probability 0 yet some point does occur, so P(A) = 0 must mean 'negligible', not 'cannot happen'.",
+   "If probabilities are assigned to arbitrary 'very strange' subsets of the square, no area function exists that is both additive and normalized, and the probability law ceases to be well defined."
+  ],
+  "needs_human_confirm": false,
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "不看任何筆記，寫出「In a continuous sample space（連續樣本空間）each individual outcome must have probability zero, and additivity must be withheld from uncountable collections to avoid contradiction」的完整推導鏈：從不可再約前提到結論，每一步只做一件事，並標明每一步用到哪個假設。",
+    "grading_key": [
+     "Under the uniform law, probability equals area, so the single point {(0.5, 0.3)} has probability equal to its area, which is 0.",
+     "Write Ω as the union of all its singletons; these are pairwise disjoint and their union is exactly Ω, so normalization demands the total be 1.",
+     "Apply additivity to that union as if it were legitimate: 1 = P(Ω) = Σ P({(x,y)}) = Σ 0 = 0, an outright contradiction.",
+     "Probability on the unit square is the uniform (area) law, so events of positive probability are exactly those of positive area"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "「In a continuous sample space（連續樣本空間）each individual outcome must have probability zero, and additivity must be withheld from uncountable collections to avoid contradiction」在什麼情況下不成立？給一個具體反例（要有數字或明確設定），並說明是哪一條假設被破壞。",
+    "grading_key": [
+     "If additivity is applied to the uncountable family of singletons, the computation returns P(Ω) = 0 while normalization demands 1, so the model is inconsistent by a full unit of probability.",
+     "Probability on the unit square is the uniform (area) law, so events of positive probability are exactly those of positive area",
+     "The event collection excludes non-measurable, 'very strange' sets to which no consistent area can be assigned"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "以下推理有一處錯，指出錯在哪一步並說明理由：「既然Ω is the unit square with the uniform law, where probability equals ar…，因此「In a continuous sample space（連續樣本空間）each individual outcome must have probability zero, and additivity must be withheld from uncountable collections to avoid contradiction」成立；既然它成立，那麼就算不滿足「Probability on the unit square is the uniform (area) law, so…」，結論也照樣成立。」",
+    "grading_key": [
+     "指出被偷偷放寬的假設：Probability on the unit square is the uniform (area) law, so…",
+     "說明這條假設失效後，推導的哪一步最先塌",
+     "If additivity is applied to the uncountable family of singletons, the …"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "用「In a continuous sample space（連續樣本空間）each individual outcome must have probability zero, and additivity must be withheld from uncountable collections to avoid contradiction」解釋你手上一個真實場景（雲端客戶用量預測／招募轉化漏斗／銷售線索評分）中的一個決策，並說出這個原理在該場景會在哪裡失效。",
+    "grading_key": [
+     "有具體決策",
+     "映射關係同構",
+     "指出場景中的失效條件"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "consecutive_lapses": 0,
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  }
+ },
+ {
+  "id": "A0011",
+  "source_name": "6.431x Unit 1｜L1 annotated slides",
+  "created_at": "2026-09-13T05:19:48+00:00",
+  "title": "A sample space（樣本空間）is only legitimate if its elements are mutually exclusive, collectively exhaustive, and at the right granularity",
+  "source_quote": "List (set) of possible outcomes, Ω • List must be: – Mutually exclusive – Collectively exhaustive – At the \"right\" granularity. [handwritten annotation] Ω = { H and rains, H and no rain, T and rains, T and no rain } (slide p03)",
+  "salience": 9,
+  "irreducible_premises": [
+   "A probabilistic model must assign exactly one outcome to each possible realization of the experiment",
+   "Probability is assigned to subsets of Ω, so Ω fixes what questions the model can even express",
+   "Normalization requires that the whole of Ω carry total probability 1",
+   "Additivity for disjoint sets requires that distinct listed outcomes cannot co-occur",
+   "Modelling choice: the level of detail retained is selected by the modeller, not by the experiment"
+  ],
+  "derivation_chain": [
+   "Start from the requirement that each realization maps to exactly one listed element; if two elements could both occur this fails, so elements must be mutually exclusive.",
+   "Apply normalization P(Ω)=1: every realization must map to some element, otherwise probability mass leaks out of the list, so the list must be collectively exhaustive.",
+   "Note that probability is assigned to subsets of Ω, so any event of interest must be expressible as a union of listed outcomes — this forces the granularity to be fine enough.",
+   "Observe from the coin-and-weather annotation that refining {H, T} into {H and rains, H and no rain, T and rains, T and no rain} is what makes rain-dependent events expressible; too coarse a list silently deletes them.",
+   "Conclude that mutual exclusivity, exhaustiveness, and granularity are three separate admissibility conditions on Ω, all traceable to normalization and additivity."
+  ],
+  "assumptions": [
+   "The experiment has a well-defined notion of 'what happened' that can be recorded as a single outcome",
+   "The modeller has fixed in advance which events must be expressible"
+  ],
+  "failure_modes": [
+   "If two listed outcomes overlap (not mutually exclusive), the additivity axiom double-counts the overlap and the total probability exceeds 1 by exactly the probability of the intersection.",
+   "If the list is not collectively exhaustive, P(Ω) computed as a sum over listed outcomes is strictly less than 1, and the deficit is exactly the probability of the omitted realizations.",
+   "If the granularity is too coarse — e.g. Ω = {H, T} when the question concerns rain — the event of interest is not a subset of Ω, so it has no probability at all and the model cannot answer the question rather than answering it wrongly."
+  ],
+  "needs_human_confirm": false,
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "不看任何筆記，寫出「A sample space（樣本空間）is only legitimate if its elements are mutually exclusive, collectively exhaustive, and at the right granularity」的完整推導鏈：從不可再約前提到結論，每一步只做一件事，並標明每一步用到哪個假設。",
+    "grading_key": [
+     "Start from the requirement that each realization maps to exactly one listed element; if two elements could both occur this fails, so elements must be mutually exclusive.",
+     "Apply normalization P(Ω)=1: every realization must map to some element, otherwise probability mass leaks out of the list, so the list must be collectively exhaustive.",
+     "Note that probability is assigned to subsets of Ω, so any event of interest must be expressible as a union of listed outcomes — this forces the granularity to be fine enough.",
+     "The experiment has a well-defined notion of 'what happened' that can be recorded as a single outcome"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "「A sample space（樣本空間）is only legitimate if its elements are mutually exclusive, collectively exhaustive, and at the right granularity」在什麼情況下不成立？給一個具體反例（要有數字或明確設定），並說明是哪一條假設被破壞。",
+    "grading_key": [
+     "If two listed outcomes overlap (not mutually exclusive), the additivity axiom double-counts the overlap and the total probability exceeds 1 by exactly the probability of the intersection.",
+     "The experiment has a well-defined notion of 'what happened' that can be recorded as a single outcome",
+     "The modeller has fixed in advance which events must be expressible"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "以下推理有一處錯，指出錯在哪一步並說明理由：「既然A probabilistic model must assign exactly one outcome to each possible…，因此「A sample space（樣本空間）is only legitimate if its elements are mutually exclusive, collectively exhaustive, and at the right granularity」成立；既然它成立，那麼就算不滿足「The experiment has a well-defined notion of 'what happened' …」，結論也照樣成立。」",
+    "grading_key": [
+     "指出被偷偷放寬的假設：The experiment has a well-defined notion of 'what happened' …",
+     "說明這條假設失效後，推導的哪一步最先塌",
+     "If two listed outcomes overlap (not mutually exclusive), the additivit…"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "用「A sample space（樣本空間）is only legitimate if its elements are mutually exclusive, collectively exhaustive, and at the right granularity」解釋你手上一個真實場景（雲端客戶用量預測／招募轉化漏斗／銷售線索評分）中的一個決策，並說出這個原理在該場景會在哪裡失效。",
+    "grading_key": [
+     "有具體決策",
+     "映射關係同構",
+     "指出場景中的失效條件"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "consecutive_lapses": 0,
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  }
+ },
+ {
+  "id": "A0012",
+  "source_name": "6.431x Unit 1｜L1 annotated slides",
+  "created_at": "2026-09-13T05:19:48+00:00",
+  "title": "Every elementary probability property is a theorem（定理）derived from the three axioms, not an additional assumption",
+  "source_quote": "Some simple consequences of the axioms. Axioms P(A) ≥ 0, P(Ω) = 1, For disjoint events: P(A ∪ B) = P(A) + P(B). Consequences P(A) ≤ 1, P(∅) = 0, P(A) + P(A^c) = 1, P(A ∪ B ∪ C) = P(A) + P(B) + P(C). [handwritten annotation] 1 =(b) P(Ω) = P(A ∪ A^c) =(c) P(A) + P(A^c); P(A) = 1 − P(A^c) ≤ 1 by (a); 1 = P(Ω) + P(Ω^c), 1 = 1 + P(∅) ⇒ P(∅) = 0 (slides p07, p08)",
+  "salience": 9,
+  "irreducible_premises": [
+   "Nonnegativity P(A) ≥ 0",
+   "Normalization P(Ω) = 1",
+   "Finite additivity on disjoint events",
+   "Set identities that are logically prior to probability: A ∪ A^c = Ω and A ∩ A^c = ∅",
+   "Associativity of union, which lets a three-way union be grouped as (A ∪ B) ∪ C"
+  ],
+  "derivation_chain": [
+   "Use the set identities A ∪ A^c = Ω and A ∩ A^c = ∅ with normalization and additivity to get 1 = P(Ω) = P(A) + P(A^c).",
+   "Apply nonnegativity to P(A^c) in P(A) = 1 − P(A^c) to obtain the upper bound P(A) ≤ 1, which was never assumed.",
+   "Take A = Ω in the same identity: 1 = P(Ω) + P(∅) = 1 + P(∅), hence P(∅) = 0.",
+   "Use associativity to write P(A ∪ B ∪ C) = P((A ∪ B) ∪ C) and apply pairwise additivity twice, giving P(A) + P(B) + P(C), and induct to k disjoint events.",
+   "Decompose a finite event {s₁,…,s_k} as the disjoint union of singletons to get P({s₁,…,s_k}) = P(s₁) + ⋯ + P(s_k), so finite outcome-level computation follows from the axioms alone."
+  ],
+  "assumptions": [
+   "The events involved are genuinely disjoint at each application of additivity",
+   "The number of events combined is finite, so finite additivity suffices"
+  ],
+  "failure_modes": [
+   "If additivity is invoked on overlapping events, the three-way extension P(A ∪ B ∪ C) = P(A) + P(B) + P(C) overcounts every shared region, and the correct decomposition is P(A) + P(A^c ∩ B) + P(A^c ∩ B^c ∩ C).",
+   "If nonnegativity is dropped, P(A) = 1 − P(A^c) no longer implies P(A) ≤ 1, so probabilities greater than 1 become consistent with the remaining axioms.",
+   "If the same argument is applied to an infinite union using only finite additivity, the induction never terminates and the conclusion does not follow — this is exactly the gap countable additivity fills."
+  ],
+  "needs_human_confirm": false,
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "不看任何筆記，寫出「Every elementary probability property is a theorem（定理）derived from the three axioms, not an additional assumption」的完整推導鏈：從不可再約前提到結論，每一步只做一件事，並標明每一步用到哪個假設。",
+    "grading_key": [
+     "Use the set identities A ∪ A^c = Ω and A ∩ A^c = ∅ with normalization and additivity to get 1 = P(Ω) = P(A) + P(A^c).",
+     "Apply nonnegativity to P(A^c) in P(A) = 1 − P(A^c) to obtain the upper bound P(A) ≤ 1, which was never assumed.",
+     "Take A = Ω in the same identity: 1 = P(Ω) + P(∅) = 1 + P(∅), hence P(∅) = 0.",
+     "The events involved are genuinely disjoint at each application of additivity"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "「Every elementary probability property is a theorem（定理）derived from the three axioms, not an additional assumption」在什麼情況下不成立？給一個具體反例（要有數字或明確設定），並說明是哪一條假設被破壞。",
+    "grading_key": [
+     "If additivity is invoked on overlapping events, the three-way extension P(A ∪ B ∪ C) = P(A) + P(B) + P(C) overcounts every shared region, and the correct decomposition is P(A) + P(A^c ∩ B) + P(A^c ∩ B^c ∩ C).",
+     "The events involved are genuinely disjoint at each application of additivity",
+     "The number of events combined is finite, so finite additivity suffices"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "以下推理有一處錯，指出錯在哪一步並說明理由：「既然Nonnegativity P(A) ≥ 0，因此「Every elementary probability property is a theorem（定理）derived from the three axioms, not an additional assumption」成立；既然它成立，那麼就算不滿足「The events involved are genuinely disjoint at each applicati…」，結論也照樣成立。」",
+    "grading_key": [
+     "指出被偷偷放寬的假設：The events involved are genuinely disjoint at each applicati…",
+     "說明這條假設失效後，推導的哪一步最先塌",
+     "If additivity is invoked on overlapping events, the three-way extensio…"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "用「Every elementary probability property is a theorem（定理）derived from the three axioms, not an additional assumption」解釋你手上一個真實場景（雲端客戶用量預測／招募轉化漏斗／銷售線索評分）中的一個決策，並說出這個原理在該場景會在哪裡失效。",
+    "grading_key": [
+     "有具體決策",
+     "映射關係同構",
+     "指出場景中的失效條件"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "consecutive_lapses": 0,
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  }
+ },
+ {
+  "id": "A0013",
+  "source_name": "6.431x Unit 1｜L1 annotated slides",
+  "created_at": "2026-09-13T05:19:48+00:00",
+  "title": "The discrete uniform law（離散均勻律）is a derived counting formula, valid only when Ω is finite and equal likelihood has been separately justified",
+  "source_quote": "Discrete uniform law – Assume Ω consists of n equally likely elements – Assume A consists of k elements. P(A) = [handwritten annotation] k · 1/n. [handwritten annotation, inserted above the first bullet] finite (slide p13)",
+  "salience": 10,
+  "irreducible_premises": [
+   "Ω is finite with n elements — the instructor's handwritten insertion of 'finite' is essential",
+   "All n outcomes are assigned equal probability, which is a modelling assumption about the experiment",
+   "Finite additivity over disjoint singletons",
+   "Normalization P(Ω) = 1",
+   "An event A is a subset containing k of those elements"
+  ],
+  "derivation_chain": [
+   "Decompose Ω into its n singletons, which are disjoint, and apply finite additivity to get P(Ω) = Σ P({sᵢ}).",
+   "Impose equal likelihood, so all n terms are a common value p, and normalization gives np = 1, hence p = 1/n — the per-outcome probability is deduced, not posited.",
+   "Decompose the event A into its k singletons and apply finite additivity again to get P(A) as a sum of k terms.",
+   "Substitute p = 1/n to obtain P(A) = k·(1/n) = k/n, so the uniform law is a counting consequence of the axioms plus the equal-likelihood assumption.",
+   "Verify on the two-roll tetrahedral die: n = 16 equally likely pairs, and the event X = 1 contains k = 4 of them, giving P(X = 1) = 4·(1/16) = 1/4, while Z = min(X,Y) = 2 contains k = 5 cells, giving 5/16.",
+   "By the equal-assignment premise, each of the n outcomes has an unknown common probability q.",
+   "Substituting q = 1/n gives P(A) = k/n, i.e. probability = (count of A)/(count of Ω), which is why the entire rest of the lecture is about counting and nothing else."
+  ],
+  "assumptions": [
+   "Ω is finite, so 1/n is a positive number and finite additivity suffices",
+   "Equal likelihood is warranted by the physical symmetry of the experiment rather than by convenience",
+   "The event A is counted at the same granularity as the elements of Ω",
+   "Ω is finite (or the model is reduced to a finite equally-likely set)",
+   "The elements listed as 'outcomes' are genuinely equally likely under the underlying model",
+   "A is a subset of that same Ω, counted in the same units as Ω"
+  ],
+  "failure_modes": [
+   "If Ω is countably infinite, equal likelihood is impossible: any common value p gives Σp equal to 0 when p = 0 and to infinity when p > 0, so normalization can never be met — which is why the 1/2ⁿ model on {1,2,…} is non-uniform.",
+   "If the outcomes are not in fact equally likely — a biased die, or a Ω whose elements were formed by merging unequal cases — then k/n is simply the wrong number and the error equals the discrepancy between the true masses and 1/n summed over A.",
+   "If A is counted at a coarser granularity than Ω, e.g. counting the value of Z rather than the (X,Y) cells that realize it, k is undercounted and P(A) comes out too small — P(Z = 2) is 5/16, not 1/16.",
+   "If the enumerated outcomes are not equally likely, k/n is simply the wrong number: e.g. counting the sum of two dice as 11 'outcomes' 2..12 gives P(sum=2)=1/11 instead of the correct 1/36, because outcome 7 is six times more likely than outcome 2. The law silently returns a value with no warning.",
+   "If A is counted in a finer or coarser unit than Ω (ordered sequences in the numerator, unordered sets in the denominator), the ratio mixes incompatible sample spaces and can even exceed 1. In the die example on slide p04 both numerator 6! and denominator 6^6 are counts of ordered 6-tuples — the correctness depends entirely on that match.",
+   "If Ω is infinite or continuous, n is not a finite number and k/n is undefined; the counting reduction has no meaning and a density-based law is required instead."
+  ],
+  "needs_human_confirm": true,
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "不看任何筆記，寫出「The discrete uniform law（離散均勻律）is a derived counting formula, valid only when Ω is finite and equal likelihood has been separately justified」的完整推導鏈：從不可再約前提到結論，每一步只做一件事，並標明每一步用到哪個假設。",
+    "grading_key": [
+     "Decompose Ω into its n singletons, which are disjoint, and apply finite additivity to get P(Ω) = Σ P({sᵢ}).",
+     "Impose equal likelihood, so all n terms are a common value p, and normalization gives np = 1, hence p = 1/n — the per-outcome probability is deduced, not posited.",
+     "Decompose the event A into its k singletons and apply finite additivity again to get P(A) as a sum of k terms.",
+     "Ω is finite, so 1/n is a positive number and finite additivity suffices"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "「The discrete uniform law（離散均勻律）is a derived counting formula, valid only when Ω is finite and equal likelihood has been separately justified」在什麼情況下不成立？給一個具體反例（要有數字或明確設定），並說明是哪一條假設被破壞。",
+    "grading_key": [
+     "If Ω is countably infinite, equal likelihood is impossible: any common value p gives Σp equal to 0 when p = 0 and to infinity when p > 0, so normalization can never be met — which is why the 1/2ⁿ model on {1,2,…} is non-uniform.",
+     "Ω is finite, so 1/n is a positive number and finite additivity suffices",
+     "Equal likelihood is warranted by the physical symmetry of the experiment rather than by convenience"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "以下推理有一處錯，指出錯在哪一步並說明理由：「既然Ω is finite with n elements — the instructor's handwritten insertion o…，因此「The discrete uniform law（離散均勻律）is a derived counting formula, valid only when Ω is finite and equal likelihood has been separately justified」成立；既然它成立，那麼就算不滿足「Ω is finite, so 1/n is a positive number and finite additivi…」，結論也照樣成立。」",
+    "grading_key": [
+     "指出被偷偷放寬的假設：Ω is finite, so 1/n is a positive number and finite additivi…",
+     "說明這條假設失效後，推導的哪一步最先塌",
+     "If Ω is countably infinite, equal likelihood is impossible: any common…"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "用「The discrete uniform law（離散均勻律）is a derived counting formula, valid only when Ω is finite and equal likelihood has been separately justified」解釋你手上一個真實場景（雲端客戶用量預測／招募轉化漏斗／銷售線索評分）中的一個決策，並說出這個原理在該場景會在哪裡失效。",
+    "grading_key": [
+     "有具體決策",
+     "映射關係同構",
+     "指出場景中的失效條件"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "consecutive_lapses": 0,
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  },
+  "merged_sources": [
+   "6.431x Unit 3｜L4 annotated slides"
+  ]
+ },
+ {
+  "id": "A0014",
+  "source_name": "6.431x Unit 2｜L2 annotated slides",
+  "created_at": "2026-09-13T05:19:48+00:00",
+  "title": "Conditioning（條件化）replaces the original probability law with a new one obtained by restricting to B and rescaling by P(B)",
+  "source_quote": "Definition of conditional probability. P(A | B) = \"probability of A, given that B occurred\". P(A | B) = P(A ∩ B) / P(B), defined only when P(B) > 0 (slide p03)",
+  "salience": 10,
+  "irreducible_premises": [
+   "A probability law P is already defined on the events of a sample space Ω and satisfies nonnegativity, P(Ω)=1, and additivity on disjoint events",
+   "Observing that event B occurred rules out every outcome outside B, so outcomes in B^c must receive zero probability in the revised model",
+   "The information 'B occurred' carries no evidence about the relative likelihoods of outcomes inside B, so those relative weights must be preserved",
+   "A revised assignment is only a probability law if the total probability it assigns to B equals 1",
+   "P(B) > 0, otherwise the conditioning event has no probability mass to renormalize"
+  ],
+  "derivation_chain": [
+   "Start from the 12-equally-likely-outcomes model on slide p02 where each outcome has probability 1/12; by the premise that outcomes outside B are ruled out, delete them and keep only the 6 outcomes of B.",
+   "By the premise that relative weights inside B are unchanged, the surviving 6 outcomes must stay equally likely to one another, so each gets the same new value c — the handwritten annotation on p02 records c = 1/6.",
+   "By the premise that the revised law must assign total probability 1, impose 6c = 1, i.e. divide every surviving weight by the original P(B) = 6/12; this is the rescaling step.",
+   "Apply the rescaled law to A: only the 2 outcomes in A ∩ B survive, giving P(A | B) = (2/12)/(6/12) = 2/6 = 1/3, exactly as annotated on p02–p03.",
+   "Abstract away from equal likelihood: for any P, the same 'restrict then rescale' operation is P(A | B) = P(A ∩ B)/P(B), which is the boxed definition on p03."
+  ],
+  "assumptions": [
+   "P(B) > 0 — the definition is stated on the slide as 'defined only when P(B) > 0'",
+   "B is a fixed conditioning event, not something that itself depends on the outcome being scored",
+   "The underlying law P on Ω is a legitimate probability law before conditioning"
+  ],
+  "failure_modes": [
+   "If P(B) = 0 the ratio is 0/0 and P(A | B) is undefined, not zero: e.g. conditioning on 'min(X,Y) = 5' for the 4-sided die of p04 gives an empty event, and any numeric answer produced by a formula that silently divides by zero is meaningless.",
+   "If the denominator is taken as P(A) instead of P(B) the numbers invert: on p04, P(M=3 | B) = (2/16)/(5/16) = 2/5, whereas dividing by P(M=3) = 3/16 gives 2/3 — a different quantity answering a different question.",
+   "Using the unconditional P(A ∩ B) as if it were P(A | B) understates the conditional probability by exactly the factor P(B): on p03, 2/12 = 1/6 instead of 1/3, i.e. a factor-of-two error whenever P(B) = 1/2."
+  ],
+  "needs_human_confirm": false,
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "不看任何筆記，寫出「Conditioning（條件化）replaces the original probability law with a new one obtained by restricting to B and rescaling by P(B)」的完整推導鏈：從不可再約前提到結論，每一步只做一件事，並標明每一步用到哪個假設。",
+    "grading_key": [
+     "Start from the 12-equally-likely-outcomes model on slide p02 where each outcome has probability 1/12; by the premise that outcomes outside B are ruled out, delete them and keep only the 6 outcomes of B.",
+     "By the premise that relative weights inside B are unchanged, the surviving 6 outcomes must stay equally likely to one another, so each gets the same new value c — the handwritten annotation on p02 records c = 1/6.",
+     "By the premise that the revised law must assign total probability 1, impose 6c = 1, i.e. divide every surviving weight by the original P(B) = 6/12; this is the rescaling step.",
+     "P(B) > 0 — the definition is stated on the slide as 'defined only when P(B) > 0'"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "「Conditioning（條件化）replaces the original probability law with a new one obtained by restricting to B and rescaling by P(B)」在什麼情況下不成立？給一個具體反例（要有數字或明確設定），並說明是哪一條假設被破壞。",
+    "grading_key": [
+     "If P(B) = 0 the ratio is 0/0 and P(A | B) is undefined, not zero: e.g. conditioning on 'min(X,Y) = 5' for the 4-sided die of p04 gives an empty event, and any numeric answer produced by a formula that silently divides by zero is meaningless.",
+     "P(B) > 0 — the definition is stated on the slide as 'defined only when P(B) > 0'",
+     "B is a fixed conditioning event, not something that itself depends on the outcome being scored"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "以下推理有一處錯，指出錯在哪一步並說明理由：「既然A probability law P is already defined on the events of a sample space…，因此「Conditioning（條件化）replaces the original probability law with a new one obtained by restricting to B and rescaling by P(B)」成立；既然它成立，那麼就算不滿足「P(B) > 0 — the definition is stated on the slide as 'defined…」，結論也照樣成立。」",
+    "grading_key": [
+     "指出被偷偷放寬的假設：P(B) > 0 — the definition is stated on the slide as 'defined…",
+     "說明這條假設失效後，推導的哪一步最先塌",
+     "If P(B) = 0 the ratio is 0/0 and P(A | B) is undefined, not zero: e.g.…"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "用「Conditioning（條件化）replaces the original probability law with a new one obtained by restricting to B and rescaling by P(B)」解釋你手上一個真實場景（雲端客戶用量預測／招募轉化漏斗／銷售線索評分）中的一個決策，並說出這個原理在該場景會在哪裡失效。",
+    "grading_key": [
+     "有具體決策",
+     "映射關係同構",
+     "指出場景中的失效條件"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "consecutive_lapses": 0,
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  }
+ },
+ {
+  "id": "A0015",
+  "source_name": "6.431x Unit 2｜L2 annotated slides",
+  "created_at": "2026-09-13T05:19:48+00:00",
+  "title": "Bayes' rule（貝氏定理）inverts the direction of conditioning: it turns a forward model P(B | A_i) plus prior beliefs P(A_i) into revised posterior beliefs P(A_i | B)",
+  "source_quote": "Bayes' rule. Partition of sample space into A_1, A_2, A_3. Have P(A_i), for every i — initial \"beliefs\". Have P(B | A_i), for every i. revised \"beliefs,\" given that B occurred: P(A_i | B) = P(A_i)P(B | A_i) / Σ_j P(A_j)P(B | A_j). [handwritten annotation] P(A_i | B) = P(A_i ∩ B)/P(B) (slide p09)",
+  "salience": 10,
+  "irreducible_premises": [
+   "The definition of conditional probability P(A_i | B) = P(A_i ∩ B)/P(B), valid because P(B) > 0",
+   "The multiplication rule P(A_i ∩ B) = P(A_i) P(B | A_i)",
+   "The total probability theorem P(B) = Σ_j P(A_j) P(B | A_j)",
+   "A_1, A_2, A_3, ... partition Ω, so exactly one cause A_i is in force and the posteriors must sum to one",
+   "The prior beliefs P(A_i) and the forward model P(B | A_i) are both given as inputs, separately from the observation B"
+  ],
+  "derivation_chain": [
+   "Start from the definition premise and write the target posterior as the ratio P(A_i | B) = P(A_i ∩ B)/P(B) — the red annotation on p09.",
+   "Replace the numerator using the multiplication rule premise: P(A_i ∩ B) = P(A_i) P(B | A_i), so the numerator is prior times likelihood, both of which are given inputs.",
+   "Replace the denominator using the total probability premise: P(B) = Σ_j P(A_j) P(B | A_j), which is also built entirely from the same given inputs.",
+   "Combine steps 2 and 3 to obtain the boxed rule P(A_i | B) = P(A_i)P(B | A_i) / Σ_j P(A_j)P(B | A_j); the denominator is the sum of all numerators, so by the partition premise the posteriors automatically sum to one.",
+   "Read the result as the inference direction of p10: the model arrow goes A_i → B via P(B | A_i), and Bayes' rule reverses it, B → A_i via P(A_i | B) — 'a systematic approach for incorporating new evidence'. The p06 radar instance gives P(A | B) = (0.05 × 0.99)/0.1445 = 0.34."
+  ],
+  "assumptions": [
+   "P(B) > 0, i.e. the observed evidence has positive probability under the model",
+   "The A_i are mutually exclusive and exhaustive, so the normalizing sum really covers all candidate causes",
+   "Priors P(A_i) and likelihoods P(B | A_i) are specified before and independently of observing B"
+  ],
+  "failure_modes": [
+   "Confusing the two directions of conditioning — reporting P(B | A_i) as if it were P(A_i | B) — is the base-rate error the radar example on p06 is built to expose: the detector is excellent, P(B | A) = 0.99, yet after an alarm P(A | B) is only 0.34, so treating 0.99 as the posterior overstates the answer by roughly a factor of three.",
+   "If a true cause is left out of the partition, the denominator Σ_j P(A_j)P(B | A_j) is too small and every posterior is inflated by the same factor, yet they still sum to one, so the arithmetic gives no warning that the model is wrong.",
+   "If the evidence is impossible under every listed cause, all P(B | A_j) = 0 makes the denominator zero and the posterior undefined — the rule cannot update on evidence its own model assigns probability zero, and no renormalization can rescue it."
+  ],
+  "needs_human_confirm": false,
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "不看任何筆記，寫出「Bayes' rule（貝氏定理）inverts the direction of conditioning: it turns a forward model P(B | A_i) plus prior beliefs P(A_i) into revised posterior beliefs P(A_i | B)」的完整推導鏈：從不可再約前提到結論，每一步只做一件事，並標明每一步用到哪個假設。",
+    "grading_key": [
+     "Start from the definition premise and write the target posterior as the ratio P(A_i | B) = P(A_i ∩ B)/P(B) — the red annotation on p09.",
+     "Replace the numerator using the multiplication rule premise: P(A_i ∩ B) = P(A_i) P(B | A_i), so the numerator is prior times likelihood, both of which are given inputs.",
+     "Replace the denominator using the total probability premise: P(B) = Σ_j P(A_j) P(B | A_j), which is also built entirely from the same given inputs.",
+     "P(B) > 0, i.e. the observed evidence has positive probability under the model"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "「Bayes' rule（貝氏定理）inverts the direction of conditioning: it turns a forward model P(B | A_i) plus prior beliefs P(A_i) into revised posterior beliefs P(A_i | B)」在什麼情況下不成立？給一個具體反例（要有數字或明確設定），並說明是哪一條假設被破壞。",
+    "grading_key": [
+     "Confusing the two directions of conditioning — reporting P(B | A_i) as if it were P(A_i | B) — is the base-rate error the radar example on p06 is built to expose: the detector is excellent, P(B | A) = 0.99, yet after an alarm P(A | B) is only 0.34, so treating 0.99 as the posterior overstates the answer by roughly a factor of three.",
+     "P(B) > 0, i.e. the observed evidence has positive probability under the model",
+     "The A_i are mutually exclusive and exhaustive, so the normalizing sum really covers all candidate causes"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "以下推理有一處錯，指出錯在哪一步並說明理由：「既然The definition of conditional probability P(A_i | B) = P(A_i ∩ B)/P(B)…，因此「Bayes' rule（貝氏定理）inverts the direction of conditioning: it turns a forward model P(B | A_i) plus prior beliefs P(A_i) into revised posterior beliefs P(A_i | B)」成立；既然它成立，那麼就算不滿足「P(B) > 0, i.e. the observed evidence has positive probabilit…」，結論也照樣成立。」",
+    "grading_key": [
+     "指出被偷偷放寬的假設：P(B) > 0, i.e. the observed evidence has positive probabilit…",
+     "說明這條假設失效後，推導的哪一步最先塌",
+     "Confusing the two directions of conditioning — reporting P(B | A_i) as…"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "用「Bayes' rule（貝氏定理）inverts the direction of conditioning: it turns a forward model P(B | A_i) plus prior beliefs P(A_i) into revised posterior beliefs P(A_i | B)」解釋你手上一個真實場景（雲端客戶用量預測／招募轉化漏斗／銷售線索評分）中的一個決策，並說出這個原理在該場景會在哪裡失效。",
+    "grading_key": [
+     "有具體決策",
+     "映射關係同構",
+     "指出場景中的失效條件"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "consecutive_lapses": 0,
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  }
+ },
+ {
+  "id": "A0016",
+  "source_name": "6.431x Unit 2｜L2 annotated slides",
+  "created_at": "2026-09-13T05:19:48+00:00",
+  "title": "The multiplication rule（乘法法則）builds the probability of an intersection as a product of one unconditional and successively conditional factors along a tree path",
+  "source_quote": "The multiplication rule. P(A | B) = P(A ∩ B)/P(B). P(A ∩ B) = P(B) P(A | B) = P(A) P(B | A). P(A^c ∩ B ∩ C^c) = [handwritten annotation] = P(A^c ∩ B) P(C^c | A^c ∩ B) = P(A^c) · P(B | A^c) P(C^c | A^c ∩ B); P(A_1 ∩ A_2 ∩ ... ∩ A_n) = P(A_1) ∏_{i=2}^{n} P(A_i | A_1 ∩ ... ∩ A_{i-1}) (slide p07)",
+  "salience": 9,
+  "irreducible_premises": [
+   "The definition P(A | B) = P(A ∩ B)/P(B) holds whenever P(B) > 0",
+   "Multiplying both sides of that definition by P(B) is an identity, not a new assumption",
+   "Intersection is commutative, so A ∩ B may be factored by conditioning on either event",
+   "Intersection is associative, so an n-fold intersection can be grouped as (A_1 ∩ ... ∩ A_{i-1}) ∩ A_i",
+   "Every prefix event A_1 ∩ ... ∩ A_{i-1} has strictly positive probability so each conditional factor exists"
+  ],
+  "derivation_chain": [
+   "Take the definition premise and clear the denominator: P(A ∩ B) = P(B) P(A | B).",
+   "By the commutativity premise, repeat the same clearing with the roles of A and B swapped to get the second printed form P(A ∩ B) = P(A) P(B | A); the two products must be equal because they describe the same set.",
+   "For three events, use the associativity premise to view A^c ∩ B ∩ C^c as (A^c ∩ B) ∩ C^c and apply step 1 once: P(A^c ∩ B ∩ C^c) = P(A^c ∩ B) P(C^c | A^c ∩ B).",
+   "Apply step 1 again to the remaining pair P(A^c ∩ B) = P(A^c) P(B | A^c), giving the handwritten three-factor product that reads exactly as the branch probabilities along the highlighted tree path on p07.",
+   "Iterate the same substitution n − 1 times, each time peeling off the last event, and the positivity premise guarantees every factor is defined: P(A_1 ∩ ... ∩ A_n) = P(A_1) ∏_{i=2}^n P(A_i | A_1 ∩ ... ∩ A_{i-1}) — the blue annotation."
+  ],
+  "assumptions": [
+   "Each conditioning event in the chain has positive probability",
+   "The ordering of events used to factor the intersection is fixed before multiplying; any order is legal but the factors must match that order",
+   "Each factor is conditioned on the full history of the preceding events, not on a single predecessor"
+  ],
+  "failure_modes": [
+   "Conditioning each factor on only the immediately preceding event instead of the whole prefix silently assumes a Markov-type property: writing P(C^c | B) in place of P(C^c | A^c ∩ B) on p07 replaces a tree-branch probability with a different number and the product no longer equals the leaf probability.",
+   "Multiplying unconditional probabilities, P(A) P(B), instead of P(A) P(B | A) assumes independence; in the radar model of p06 that would give 0.05 × 0.1445 ≈ 0.0072 instead of the correct 0.05 × 0.99 = 0.0495, an error of nearly a factor of seven.",
+   "If some prefix event has probability zero the corresponding conditional factor is undefined; the product must then be assigned zero directly, since any attempt to evaluate the factor divides by zero."
+  ],
+  "needs_human_confirm": false,
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "不看任何筆記，寫出「The multiplication rule（乘法法則）builds the probability of an intersection as a product of one unconditional and successively conditional factors along a tree path」的完整推導鏈：從不可再約前提到結論，每一步只做一件事，並標明每一步用到哪個假設。",
+    "grading_key": [
+     "Take the definition premise and clear the denominator: P(A ∩ B) = P(B) P(A | B).",
+     "By the commutativity premise, repeat the same clearing with the roles of A and B swapped to get the second printed form P(A ∩ B) = P(A) P(B | A); the two products must be equal because they describe the same set.",
+     "For three events, use the associativity premise to view A^c ∩ B ∩ C^c as (A^c ∩ B) ∩ C^c and apply step 1 once: P(A^c ∩ B ∩ C^c) = P(A^c ∩ B) P(C^c | A^c ∩ B).",
+     "Each conditioning event in the chain has positive probability"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "「The multiplication rule（乘法法則）builds the probability of an intersection as a product of one unconditional and successively conditional factors along a tree path」在什麼情況下不成立？給一個具體反例（要有數字或明確設定），並說明是哪一條假設被破壞。",
+    "grading_key": [
+     "Conditioning each factor on only the immediately preceding event instead of the whole prefix silently assumes a Markov-type property: writing P(C^c | B) in place of P(C^c | A^c ∩ B) on p07 replaces a tree-branch probability with a different number and the product no longer equals the leaf probability.",
+     "Each conditioning event in the chain has positive probability",
+     "The ordering of events used to factor the intersection is fixed before multiplying; any order is legal but the factors must match that order"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "以下推理有一處錯，指出錯在哪一步並說明理由：「既然The definition P(A | B) = P(A ∩ B)/P(B) holds whenever P(B) > 0，因此「The multiplication rule（乘法法則）builds the probability of an intersection as a product of one unconditional and successively conditional factors along a tree path」成立；既然它成立，那麼就算不滿足「Each conditioning event in the chain has positive probabilit…」，結論也照樣成立。」",
+    "grading_key": [
+     "指出被偷偷放寬的假設：Each conditioning event in the chain has positive probabilit…",
+     "說明這條假設失效後，推導的哪一步最先塌",
+     "Conditioning each factor on only the immediately preceding event inste…"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "用「The multiplication rule（乘法法則）builds the probability of an intersection as a product of one unconditional and successively conditional factors along a tree path」解釋你手上一個真實場景（雲端客戶用量預測／招募轉化漏斗／銷售線索評分）中的一個決策，並說出這個原理在該場景會在哪裡失效。",
+    "grading_key": [
+     "有具體決策",
+     "映射關係同構",
+     "指出場景中的失效條件"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "consecutive_lapses": 0,
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  }
+ },
+ {
+  "id": "A0017",
+  "source_name": "6.431x Unit 2｜L2 annotated slides",
+  "created_at": "2026-09-13T05:19:48+00:00",
+  "title": "The conditional law P(· | B) satisfies the probability axioms（機率公理）, so every theorem proved for ordinary probabilities transfers verbatim to conditional ones",
+  "source_quote": "Conditional probabilities share properties of ordinary probabilities. P(A | B) ≥ 0, assuming P(B) > 0. P(Ω | B) = ... P(B | B) = ... If A ∩ C = ∅, then P(A ∪ C | B) = P(A | B) + P(C | B). [handwritten annotation] P(Ω | B) = P(Ω ∩ B)/P(B) = P(B)/P(B) = 1; P(B | B) = P(B ∩ B)/P(B) = 1; P((A ∪ C) ∩ B)/P(B) = P((A ∩ B) ∪ (C ∩ B))/P(B) = [P(A ∩ B) + P(C ∩ B)]/P(B) = P(A | B) + P(C | B); also finite countable additivity (slide p05)",
+  "salience": 8,
+  "irreducible_premises": [
+   "P(A | B) is defined as the ratio P(A ∩ B)/P(B) with P(B) > 0",
+   "The original P satisfies nonnegativity and additivity over disjoint events",
+   "Intersection distributes over union: (A ∪ C) ∩ B = (A ∩ B) ∪ (C ∩ B)",
+   "If A and C are disjoint then A ∩ B and C ∩ B are also disjoint",
+   "Any function on events satisfying the three axioms is itself a probability law, and all consequences of the axioms follow from them alone"
+  ],
+  "derivation_chain": [
+   "Nonnegativity: by the definition premise, numerator P(A ∩ B) ≥ 0 and denominator P(B) > 0, so the ratio is ≥ 0.",
+   "Normalization: apply the definition to A = Ω, using Ω ∩ B = B, to get P(Ω | B) = P(B)/P(B) = 1 — the handwritten line on p05; the same computation with A = B gives P(B | B) = 1, so B becomes the new sure event.",
+   "Additivity: for disjoint A, C, expand P(A ∪ C | B) = P((A ∪ C) ∩ B)/P(B), then use the distributivity premise to rewrite the numerator as P((A ∩ B) ∪ (C ∩ B)).",
+   "Use the premise that A ∩ B and C ∩ B are disjoint plus additivity of P to split the numerator into P(A ∩ B) + P(C ∩ B), then divide each term by P(B) to get P(A | B) + P(C | B); the blue annotation extends this to finite and countable additivity.",
+   "Since all three axioms hold, invoke the last premise: every axiom-derived result — complements, unions, monotonicity, and the total probability theorem itself — holds with every P replaced by P(· | B)."
+  ],
+  "assumptions": [
+   "P(B) > 0 is held fixed throughout, exactly as printed on the slide",
+   "The conditioning event B is the same in every term being combined",
+   "The events being combined are disjoint in the additivity claim"
+  ],
+  "failure_modes": [
+   "Additivity is only valid across events with the same conditioning event: P(A | B) + P(A | B^c) is not P(A | Ω) and generally does not equal P(A) — in the radar model of p06 it sums to 0.99 + 0.10 = 1.09 > 1, which is not even a probability.",
+   "Additivity applies to the first argument, never the second: P(A | B ∪ C) ≠ P(A | B) + P(A | C) even for disjoint B and C, because B ∪ C changes the denominator from P(B) to P(B) + P(C).",
+   "If A and C overlap, the split in step 4 double-counts P(A ∩ C ∩ B)/P(B), so the claimed sum overstates P(A ∪ C | B) by exactly that amount."
+  ],
+  "needs_human_confirm": false,
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "不看任何筆記，寫出「The conditional law P(· | B) satisfies the probability axioms（機率公理）, so every theorem proved for ordinary probabilities transfers verbatim to conditional ones」的完整推導鏈：從不可再約前提到結論，每一步只做一件事，並標明每一步用到哪個假設。",
+    "grading_key": [
+     "Nonnegativity: by the definition premise, numerator P(A ∩ B) ≥ 0 and denominator P(B) > 0, so the ratio is ≥ 0.",
+     "Normalization: apply the definition to A = Ω, using Ω ∩ B = B, to get P(Ω | B) = P(B)/P(B) = 1 — the handwritten line on p05; the same computation with A = B gives P(B | B) = 1, so B becomes the new sure event.",
+     "Additivity: for disjoint A, C, expand P(A ∪ C | B) = P((A ∪ C) ∩ B)/P(B), then use the distributivity premise to rewrite the numerator as P((A ∩ B) ∪ (C ∩ B)).",
+     "P(B) > 0 is held fixed throughout, exactly as printed on the slide"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "「The conditional law P(· | B) satisfies the probability axioms（機率公理）, so every theorem proved for ordinary probabilities transfers verbatim to conditional ones」在什麼情況下不成立？給一個具體反例（要有數字或明確設定），並說明是哪一條假設被破壞。",
+    "grading_key": [
+     "Additivity is only valid across events with the same conditioning event: P(A | B) + P(A | B^c) is not P(A | Ω) and generally does not equal P(A) — in the radar model of p06 it sums to 0.99 + 0.10 = 1.09 > 1, which is not even a probability.",
+     "P(B) > 0 is held fixed throughout, exactly as printed on the slide",
+     "The conditioning event B is the same in every term being combined"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "以下推理有一處錯，指出錯在哪一步並說明理由：「既然P(A | B) is defined as the ratio P(A ∩ B)/P(B) with P(B) > 0，因此「The conditional law P(· | B) satisfies the probability axioms（機率公理）, so every theorem proved for ordinary probabilities transfers verbatim to conditional ones」成立；既然它成立，那麼就算不滿足「P(B) > 0 is held fixed throughout, exactly as printed on the…」，結論也照樣成立。」",
+    "grading_key": [
+     "指出被偷偷放寬的假設：P(B) > 0 is held fixed throughout, exactly as printed on the…",
+     "說明這條假設失效後，推導的哪一步最先塌",
+     "Additivity is only valid across events with the same conditioning even…"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "用「The conditional law P(· | B) satisfies the probability axioms（機率公理）, so every theorem proved for ordinary probabilities transfers verbatim to conditional ones」解釋你手上一個真實場景（雲端客戶用量預測／招募轉化漏斗／銷售線索評分）中的一個決策，並說出這個原理在該場景會在哪裡失效。",
+    "grading_key": [
+     "有具體決策",
+     "映射關係同構",
+     "指出場景中的失效條件"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "consecutive_lapses": 0,
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  }
+ },
+ {
+  "id": "A0018",
+  "source_name": "6.431x Unit 2｜L3 annotated slides",
+  "created_at": "2026-09-13T05:19:48+00:00",
+  "title": "Independence of a collection requires the product identity for every subset of indices, so pairwise independence（兩兩獨立）is strictly weaker",
+  "source_quote": "Definition: Events A₁, A₂, …, Aₙ are called independent if: P(A_i ∩ A_j ∩ ⋯ ∩ A_m) = P(A_i)P(A_j) ⋯ P(A_m) for any distinct indices i, j, …, m. … H₁, H₂, and C are pairwise independent, but not independent (slides p07, p08)",
+  "salience": 9,
+  "irreducible_premises": [
+   "The product identity is imposed separately on each subset of distinct indices; it is a family of 2ⁿ − n − 1 equations, not one equation",
+   "The intuitive content is that information on some of the events does not change probabilities related to the remaining events",
+   "Equal-likelihood assignment on {HH, HT, TH, TT} with probability 1/4 each",
+   "Two-event independence of H₁ and H₂ does not constrain any event defined jointly on both tosses"
+  ],
+  "derivation_chain": [
+   "Write out the definition for n = 3, using the every-subset premise: three pairwise equations plus the separate triple equation P(A₁∩A₂∩A₃) = P(A₁)P(A₂)P(A₃).",
+   "Take the slide's counterexample: two independent fair tosses, H₁ = first is H, H₂ = second is H, C = the two tosses had the same result = {HH, TT}, so P(H₁) = P(H₂) = P(C) = 1/2 under the equal-likelihood premise.",
+   "Verify the three pairwise equations: P(H₁∩C) = P(H₁∩H₂) = 1/4 = (1/2)(1/2) = P(H₁)P(C), and symmetrically for H₂ and C, so all three pairs are independent.",
+   "Test the triple: P(H₁∩H₂∩C) = P(HH) = 1/4, while P(H₁)P(H₂)P(C) = 1/8 — the two differ by 1/8, so the collection is not independent.",
+   "Read the same failure in conditional form: P(C|H₁) = P(H₂|H₁) = 1/2 = P(C), but P(C|H₁∩H₂) = 1 ≠ 1/2, so joint information on two events does change the third — exactly what the intuitive premise forbids."
+  ],
+  "assumptions": [
+   "All events are defined on one common sample space with a single law",
+   "The collection is checked subset by subset, including all higher-order intersections",
+   "In the counterexample the two tosses are fair and independent"
+  ],
+  "failure_modes": [
+   "Certifying a collection as independent after checking only pairs: for H₁, H₂, C the triple probability is 1/4 instead of 1/8, so any computation multiplying all three marginals is off by a factor of 2.",
+   "Using pairwise independence to justify 'information on some events does not affect the rest': here P(C|H₁∩H₂) = 1 while P(C) = 1/2, so a conditional forecast built on pairwise checks can be wrong by 1/2 and can even mistake a certainty for a coin flip.",
+   "Checking only the single full-collection identity and skipping subsets: P(A₁∩A₂∩A₃)=P(A₁)P(A₂)P(A₃) can hold while a pair fails, so subsets of the collection then cannot be multiplied out."
+  ],
+  "needs_human_confirm": false,
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "不看任何筆記，寫出「Independence of a collection requires the product identity for every subset of indices, so pairwise independence（兩兩獨立）is strictly weaker」的完整推導鏈：從不可再約前提到結論，每一步只做一件事，並標明每一步用到哪個假設。",
+    "grading_key": [
+     "Write out the definition for n = 3, using the every-subset premise: three pairwise equations plus the separate triple equation P(A₁∩A₂∩A₃) = P(A₁)P(A₂)P(A₃).",
+     "Take the slide's counterexample: two independent fair tosses, H₁ = first is H, H₂ = second is H, C = the two tosses had the same result = {HH, TT}, so P(H₁) = P(H₂) = P(C) = 1/2 under the equal-likelihood premise.",
+     "Verify the three pairwise equations: P(H₁∩C) = P(H₁∩H₂) = 1/4 = (1/2)(1/2) = P(H₁)P(C), and symmetrically for H₂ and C, so all three pairs are independent.",
+     "All events are defined on one common sample space with a single law"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "「Independence of a collection requires the product identity for every subset of indices, so pairwise independence（兩兩獨立）is strictly weaker」在什麼情況下不成立？給一個具體反例（要有數字或明確設定），並說明是哪一條假設被破壞。",
+    "grading_key": [
+     "Certifying a collection as independent after checking only pairs: for H₁, H₂, C the triple probability is 1/4 instead of 1/8, so any computation multiplying all three marginals is off by a factor of 2.",
+     "All events are defined on one common sample space with a single law",
+     "The collection is checked subset by subset, including all higher-order intersections"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "以下推理有一處錯，指出錯在哪一步並說明理由：「既然The product identity is imposed separately on each subset of distinct …，因此「Independence of a collection requires the product identity for every subset of indices, so pairwise independence（兩兩獨立）is strictly weaker」成立；既然它成立，那麼就算不滿足「All events are defined on one common sample space with a sin…」，結論也照樣成立。」",
+    "grading_key": [
+     "指出被偷偷放寬的假設：All events are defined on one common sample space with a sin…",
+     "說明這條假設失效後，推導的哪一步最先塌",
+     "Certifying a collection as independent after checking only pairs: for …"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "用「Independence of a collection requires the product identity for every subset of indices, so pairwise independence（兩兩獨立）is strictly weaker」解釋你手上一個真實場景（雲端客戶用量預測／招募轉化漏斗／銷售線索評分）中的一個決策，並說出這個原理在該場景會在哪裡失效。",
+    "grading_key": [
+     "有具體決策",
+     "映射關係同構",
+     "指出場景中的失效條件"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "consecutive_lapses": 0,
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  }
+ },
+ {
+  "id": "A0019",
+  "source_name": "6.431x Unit 2｜L3 annotated slides",
+  "created_at": "2026-09-13T05:19:48+00:00",
+  "title": "System reliability（可靠度）: independence of unit states turns series connectivity into a product of pᵢ and parallel connectivity into 1 − ∏(1 − pᵢ)",
+  "source_quote": "Reliability. pᵢ: probability that unit i is \"up\". independent units. probability that system is \"up\"? [handwritten annotation] Uᵢ: ith unit up; U₁,U₂,…,Uₙ independent; Fᵢ: ith unit down ⇒ Fᵢ independent. P(system up) = P(U₁∩U₂∩U₃) = P(U₁)P(U₂)P(U₃) = p₁p₂p₃. P(system is up) = P(U₁∪U₂∪U₃) = 1 − P(F₁∩F₂∩F₃) = 1 − P(F₁)P(F₂)P(F₃) = 1 − (1−p₁)(1−p₂)(1−p₃) (slide p09)",
+  "salience": 8,
+  "irreducible_premises": [
+   "Each unit i has a state event Uᵢ with P(Uᵢ) = pᵢ",
+   "The events U₁, …, Uₙ are independent as a collection, so every subset multiplies",
+   "Closure of independence under complements, extended to the collection: the down-events Fᵢ = Uᵢᶜ are independent too",
+   "De Morgan / complement identity P(U₁∪⋯∪Uₙ) = 1 − P(F₁∩⋯∩Fₙ)",
+   "Series connectivity means all units must be up; parallel connectivity means at least one must be up"
+  ],
+  "derivation_chain": [
+   "Translate the wiring diagram into events, using the connectivity premise: series 'system up' = U₁∩U₂∩U₃, parallel 'system up' = U₁∪U₂∪U₃.",
+   "For the series case apply collection independence directly to the intersection: P(U₁∩U₂∩U₃) = P(U₁)P(U₂)P(U₃) = p₁p₂p₃.",
+   "For the parallel case the union is not a product, so convert it with the complement identity: P(U₁∪U₂∪U₃) = 1 − P(F₁∩F₂∩F₃).",
+   "Use closure under complements to declare F₁, F₂, F₃ independent, then multiply: P(F₁∩F₂∩F₃) = (1−p₁)(1−p₂)(1−p₃).",
+   "Combine: P(parallel system up) = 1 − (1−p₁)(1−p₂)(1−p₃), which is at least maxᵢ pᵢ, while the series answer p₁p₂p₃ is at most minᵢ pᵢ."
+  ],
+  "assumptions": [
+   "Units fail independently — no shared power supply, shared load, or common environmental shock",
+   "Each unit is strictly two-state, up or down, with no partial or intermittent state",
+   "The network reduces cleanly into series and parallel blocks so the events are pure intersections and unions of the Uᵢ"
+  ],
+  "failure_modes": [
+   "Correlated failures: if the units share a common cause, the true series reliability exceeds p₁p₂p₃ (failures coincide) and the true parallel reliability falls below 1 − ∏(1−pᵢ), so the independence formula misstates the risk in the direction that matters for design.",
+   "Multiplying the union directly, i.e. computing P(U₁∪U₂∪U₃) as p₁p₂p₃: this returns the series answer for a parallel network — with p₁=p₂=p₃=0.9 it gives 0.729 instead of 0.999, understating reliability by 0.27.",
+   "Applying the product step when the collection is only pairwise independent: the three-way identity P(F₁∩F₂∩F₃)=P(F₁)P(F₂)P(F₃) is exactly the equation pairwise independence fails to supply, so the parallel formula has no justification."
+  ],
+  "needs_human_confirm": false,
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "不看任何筆記，寫出「System reliability（可靠度）: independence of unit states turns series connectivity into a product of pᵢ and parallel connectivity into 1 − ∏(1 − pᵢ)」的完整推導鏈：從不可再約前提到結論，每一步只做一件事，並標明每一步用到哪個假設。",
+    "grading_key": [
+     "Translate the wiring diagram into events, using the connectivity premise: series 'system up' = U₁∩U₂∩U₃, parallel 'system up' = U₁∪U₂∪U₃.",
+     "For the series case apply collection independence directly to the intersection: P(U₁∩U₂∩U₃) = P(U₁)P(U₂)P(U₃) = p₁p₂p₃.",
+     "For the parallel case the union is not a product, so convert it with the complement identity: P(U₁∪U₂∪U₃) = 1 − P(F₁∩F₂∩F₃).",
+     "Units fail independently — no shared power supply, shared load, or common environmental shock"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "「System reliability（可靠度）: independence of unit states turns series connectivity into a product of pᵢ and parallel connectivity into 1 − ∏(1 − pᵢ)」在什麼情況下不成立？給一個具體反例（要有數字或明確設定），並說明是哪一條假設被破壞。",
+    "grading_key": [
+     "Correlated failures: if the units share a common cause, the true series reliability exceeds p₁p₂p₃ (failures coincide) and the true parallel reliability falls below 1 − ∏(1−pᵢ), so the independence formula misstates the risk in the direction that matters for design.",
+     "Units fail independently — no shared power supply, shared load, or common environmental shock",
+     "Each unit is strictly two-state, up or down, with no partial or intermittent state"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "以下推理有一處錯，指出錯在哪一步並說明理由：「既然Each unit i has a state event Uᵢ with P(Uᵢ) = pᵢ，因此「System reliability（可靠度）: independence of unit states turns series connectivity into a product of pᵢ and parallel connectivity into 1 − ∏(1 − pᵢ)」成立；既然它成立，那麼就算不滿足「Units fail independently — no shared power supply, shared lo…」，結論也照樣成立。」",
+    "grading_key": [
+     "指出被偷偷放寬的假設：Units fail independently — no shared power supply, shared lo…",
+     "說明這條假設失效後，推導的哪一步最先塌",
+     "Correlated failures: if the units share a common cause, the true serie…"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "用「System reliability（可靠度）: independence of unit states turns series connectivity into a product of pᵢ and parallel connectivity into 1 − ∏(1 − pᵢ)」解釋你手上一個真實場景（雲端客戶用量預測／招募轉化漏斗／銷售線索評分）中的一個決策，並說出這個原理在該場景會在哪裡失效。",
+    "grading_key": [
+     "有具體決策",
+     "映射關係同構",
+     "指出場景中的失效條件"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "consecutive_lapses": 0,
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  }
+ },
+ {
+  "id": "A0020",
+  "source_name": "6.431x Unit 2｜L3 annotated slides",
+  "created_at": "2026-09-13T05:19:48+00:00",
+  "title": "The king's sibling puzzle: independent child genders fix the prior, but the conditioning protocol（觀測程序）fixes the answer",
+  "source_quote": "The king's sibling. The king comes from a family of two children. What is the probability that his sibling is female? [handwritten annotation] 1/2 crossed out, replaced by 2/3. P(boy) = P(girl) = 1/2, independent. boys have precedence. BB 1/4, BG 1/4, GB 1/4, GG 1/4. • till 1 boy ⇒ P(G) = 1; • till 2 boys ⇒ P(G) = 0 (slide p10)",
+  "salience": 8,
+  "irreducible_premises": [
+   "Each child is a boy or girl with probability 1/2, and the two children's genders are independent, giving BB, BG, GB, GG each probability 1/4",
+   "Conditional probability requires the conditioning event to be specified as a set of outcomes, not as a verbal fact",
+   "Different data-generating protocols map the same verbal fact to different conditioning events",
+   "'Boys have precedence' — the king exists iff the family contains at least one boy"
+  ],
+  "derivation_chain": [
+   "Assign the prior from independence and fairness: the four outcomes BB, BG, GB, GG each have probability 1/4.",
+   "Under the precedence premise, translate 'there is a king' into the event {BB, BG, GB}, of probability 3/4, and note this is the green loop drawn on the slide.",
+   "Condition: the sibling is female in the two outcomes BG and GB, so P(sibling female | at least one boy) = (1/4 + 1/4)/(3/4) = 2/3, not the crossed-out 1/2.",
+   "Change only the protocol, keeping the same independent prior: if the family kept having children until it had 1 boy, the boy is the last child and every earlier child is a girl, so P(G) = 1; if it kept going until 2 boys, the sibling is the other boy and P(G) = 0.",
+   "Conclude that the prior on genders is not what determines the answer — the answer ranges over 0, 1/2, 2/3, 1 as the conditioning event changes, so the protocol must be stated before any number is computed."
+  ],
+  "assumptions": [
+   "Genders are independent and equally likely, with no twins and no biological correlation",
+   "The stopping or selection rule that produced the observation is fully specified",
+   "The king's own gender is fixed as male by the setup, so it carries no additional information beyond defining the conditioning event"
+  ],
+  "failure_modes": [
+   "Answering 1/2 by treating the sibling's gender as an untouched independent coin: this ignores that the conditioning event {BB, BG, GB} removed GG, and it is wrong by 1/6 — the slide crosses out 1/2 in favour of 2/3.",
+   "Reusing the 2/3 answer under a stopping rule: with 'children until 1 boy' the correct answer is 1 and with 'until 2 boys' it is 0, so the same verbal question is off by 1/3 or 2/3 depending on the protocol.",
+   "Conditioning on an under-specified verbal fact such as 'one of them is a boy' without saying how that fact was learned: the conditioning set is ambiguous between {BB, BG, GB} and a specific-child event, and the two give 2/3 and 1/2 respectively."
+  ],
+  "needs_human_confirm": false,
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "不看任何筆記，寫出「The king's sibling puzzle: independent child genders fix the prior, but the conditioning protocol（觀測程序）fixes the answer」的完整推導鏈：從不可再約前提到結論，每一步只做一件事，並標明每一步用到哪個假設。",
+    "grading_key": [
+     "Assign the prior from independence and fairness: the four outcomes BB, BG, GB, GG each have probability 1/4.",
+     "Under the precedence premise, translate 'there is a king' into the event {BB, BG, GB}, of probability 3/4, and note this is the green loop drawn on the slide.",
+     "Condition: the sibling is female in the two outcomes BG and GB, so P(sibling female | at least one boy) = (1/4 + 1/4)/(3/4) = 2/3, not the crossed-out 1/2.",
+     "Genders are independent and equally likely, with no twins and no biological correlation"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "「The king's sibling puzzle: independent child genders fix the prior, but the conditioning protocol（觀測程序）fixes the answer」在什麼情況下不成立？給一個具體反例（要有數字或明確設定），並說明是哪一條假設被破壞。",
+    "grading_key": [
+     "Answering 1/2 by treating the sibling's gender as an untouched independent coin: this ignores that the conditioning event {BB, BG, GB} removed GG, and it is wrong by 1/6 — the slide crosses out 1/2 in favour of 2/3.",
+     "Genders are independent and equally likely, with no twins and no biological correlation",
+     "The stopping or selection rule that produced the observation is fully specified"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "以下推理有一處錯，指出錯在哪一步並說明理由：「既然Each child is a boy or girl with probability 1/2, and the two children…，因此「The king's sibling puzzle: independent child genders fix the prior, but the conditioning protocol（觀測程序）fixes the answer」成立；既然它成立，那麼就算不滿足「Genders are independent and equally likely, with no twins an…」，結論也照樣成立。」",
+    "grading_key": [
+     "指出被偷偷放寬的假設：Genders are independent and equally likely, with no twins an…",
+     "說明這條假設失效後，推導的哪一步最先塌",
+     "Answering 1/2 by treating the sibling's gender as an untouched indepen…"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "用「The king's sibling puzzle: independent child genders fix the prior, but the conditioning protocol（觀測程序）fixes the answer」解釋你手上一個真實場景（雲端客戶用量預測／招募轉化漏斗／銷售線索評分）中的一個決策，並說出這個原理在該場景會在哪裡失效。",
+    "grading_key": [
+     "有具體決策",
+     "映射關係同構",
+     "指出場景中的失效條件"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "consecutive_lapses": 0,
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  }
+ },
+ {
+  "id": "A0021",
+  "source_name": "6.431x Unit 3｜L4 annotated slides",
+  "created_at": "2026-09-13T05:19:48+00:00",
+  "title": "The basic counting principle（計數基本原理）multiplies stage counts, and it is valid only when the NUMBER of choices at each stage is the same no matter what was chosen earlier",
+  "source_quote": "Basic counting principle. • r stages • n_i choices at stage i. Number of choices is: [handwritten annotation] n₁ · n₂ ··· n_r  [handwritten annotation on the tree: 4, 12, 24 = 4·3·2; r = 3, n₁ = 4, n₂ = 3, n₃ = 2] (slide p02)",
+  "salience": 10,
+  "irreducible_premises": [
+   "A composite object is built by a fixed sequence of r stages",
+   "Each distinct sequence of stage-choices yields a distinct object, and every object arises from exactly one such sequence",
+   "At stage i the number of available choices is n_i, a constant independent of the choices made at stages 1..i-1",
+   "Counting a finite set can be done by counting the leaves of the construction tree"
+  ],
+  "derivation_chain": [
+   "Represent the construction as a tree whose depth-i nodes are the partial objects after i stages (premise: staged construction).",
+   "By the constant-count premise, every node at depth i-1 has exactly n_i children, so the node count multiplies by n_i at each level: 4, then 4·3 = 12, then 4·3·2 = 24 in the shirts/ties/jackets tree.",
+   "Hence the number of leaves at depth r is n₁ n₂ ··· n_r.",
+   "By the bijection premise (each object ↔ exactly one leaf), the number of objects equals that product; permutations follow immediately as n(n-1)(n-2)···1 = n! and the subsets of {1,...,n} as 2·2···2 = 2^n by taking 'in or out' as each stage."
+  ],
+  "assumptions": [
+   "The count n_i at each stage does not depend on earlier choices (the identity of the available options may change, the count may not)",
+   "The stage-sequence → object map is a bijection: no object is reachable by two different sequences and none is unreachable",
+   "The number of stages r is fixed in advance"
+  ],
+  "failure_modes": [
+   "If the number of choices at a stage depends on earlier choices, the product is wrong. Example: license plates with 2 letters then 3 digits give 26·26·10·10·10, but with repetition prohibited the counts fall to 26·25·10·9·8 — the principle still applies there only because the *count* drops by a fixed amount each stage; if instead the available count varied with WHICH earlier item was picked (e.g. 'pick a divisor of the first number'), no single n_i exists and the product silently over- or under-counts.",
+   "If different stage-sequences produce the same object, the product over-counts by exactly the multiplicity of that collapse — this is the defect that combinations must repair by dividing by k!.",
+   "If the same object can be built by a different number of stages (variable r), the tree has leaves at several depths and the single product misses all leaves outside depth r."
+  ],
+  "needs_human_confirm": false,
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "不看任何筆記，寫出「The basic counting principle（計數基本原理）multiplies stage counts, and it is valid only when the NUMBER of choices at each stage is the same no matter what was chosen earlier」的完整推導鏈：從不可再約前提到結論，每一步只做一件事，並標明每一步用到哪個假設。",
+    "grading_key": [
+     "Represent the construction as a tree whose depth-i nodes are the partial objects after i stages (premise: staged construction).",
+     "By the constant-count premise, every node at depth i-1 has exactly n_i children, so the node count multiplies by n_i at each level: 4, then 4·3 = 12, then 4·3·2 = 24 in the shirts/ties/jackets tree.",
+     "Hence the number of leaves at depth r is n₁ n₂ ··· n_r.",
+     "The count n_i at each stage does not depend on earlier choices (the identity of the available options may change, the count may not)"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "「The basic counting principle（計數基本原理）multiplies stage counts, and it is valid only when the NUMBER of choices at each stage is the same no matter what was chosen earlier」在什麼情況下不成立？給一個具體反例（要有數字或明確設定），並說明是哪一條假設被破壞。",
+    "grading_key": [
+     "If the number of choices at a stage depends on earlier choices, the product is wrong. Example: license plates with 2 letters then 3 digits give 26·26·10·10·10, but with repetition prohibited the counts fall to 26·25·10·9·8 — the principle still applies there only because the *count* drops by a fixed amount each stage; if instead the available count varied with WHICH earlier item was picked (e.g. 'pick a divisor of the first number'), no single n_i exists and the product silently over- or under-counts.",
+     "The count n_i at each stage does not depend on earlier choices (the identity of the available options may change, the count may not)",
+     "The stage-sequence → object map is a bijection: no object is reachable by two different sequences and none is unreachable"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "以下推理有一處錯，指出錯在哪一步並說明理由：「既然A composite object is built by a fixed sequence of r stages，因此「The basic counting principle（計數基本原理）multiplies stage counts, and it is valid only when the NUMBER of choices at each stage is the same no matter what was chosen earlier」成立；既然它成立，那麼就算不滿足「The count n_i at each stage does not depend on earlier choic…」，結論也照樣成立。」",
+    "grading_key": [
+     "指出被偷偷放寬的假設：The count n_i at each stage does not depend on earlier choic…",
+     "說明這條假設失效後，推導的哪一步最先塌",
+     "If the number of choices at a stage depends on earlier choices, the pr…"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "用「The basic counting principle（計數基本原理）multiplies stage counts, and it is valid only when the NUMBER of choices at each stage is the same no matter what was chosen earlier」解釋你手上一個真實場景（雲端客戶用量預測／招募轉化漏斗／銷售線索評分）中的一個決策，並說出這個原理在該場景會在哪裡失效。",
+    "grading_key": [
+     "有具體決策",
+     "映射關係同構",
+     "指出場景中的失效條件"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "consecutive_lapses": 0,
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  }
+ },
+ {
+  "id": "A0022",
+  "source_name": "6.431x Unit 3｜L4 annotated slides",
+  "created_at": "2026-09-13T05:19:48+00:00",
+  "title": "The binomial coefficient（二項式係數）divides by k! because the two-route construction of an ordered k-sequence over-counts each subset exactly k! times",
+  "source_quote": "Combinations. Definition: (n choose k): number of k-element subsets of a given n-element set. • Two ways of constructing an ordered sequence of k distinct items: — Choose the k items one at a time — Choose k items, then order them. [handwritten annotation] n(n-1)(n-2)···(n-k+1) = n!/(n-k)! ; (n choose k) k! ; = n!/(k!(n-k)!) (slide p05)",
+  "salience": 10,
+  "irreducible_premises": [
+   "The basic counting principle (product over stages with choice-counts independent of earlier choices)",
+   "The number of orderings of k distinct items is k! (permutations)",
+   "A k-element subset carries no order: it is one object regardless of how its members are listed",
+   "Two correct counts of the SAME set must be equal (the double-counting identity)"
+  ],
+  "derivation_chain": [
+   "Route 1: build an ordered sequence of k distinct items one slot at a time; by the counting principle this gives n(n-1)···(n-k+1) = n!/(n-k)! sequences.",
+   "Route 2: first choose the underlying k-element subset in (n choose k) ways, then arrange those k items in k! orders; by the counting principle this gives (n choose k)·k! sequences.",
+   "Both routes count exactly the same set of ordered k-sequences, so by the double-counting premise (n choose k)·k! = n!/(n-k)!.",
+   "Solving for the unknown, (n choose k) = n!/(k!(n-k)!): the k! in the denominator is not a formula to memorise, it is precisely the number of orderings of one subset — the factor by which the ordered count over-counts the unordered one.",
+   "The same identity fixes the boundary cases via the convention 0! = 1: (n choose n) = n!/(n!0!) = 1 and (n choose 0) = n!/(0!n!) = 1, the single subset being the whole set and the empty set."
+  ],
+  "assumptions": [
+   "The n items are distinguishable and the k chosen items are distinct (no repetition)",
+   "The target objects are unordered subsets, and 0 ≤ k ≤ n",
+   "0! = 1 by convention, so the endpoint cases are consistent"
+  ],
+  "failure_modes": [
+   "If selection is with replacement, an ordered sequence has n^k possibilities and repeated items have fewer than k! distinct orderings, so dividing by k! is not an integer division of a uniform over-count and n!/(k!(n-k)!) is simply the wrong count.",
+   "If some items are indistinguishable, distinct-looking sequences coincide as objects and the k! over-count is not uniform across subsets — dividing by k! then under-counts some configurations and over-counts none uniformly, producing a non-integer or an incorrect integer.",
+   "If order actually matters in the problem (arrangements, not committees), dividing by k! discards real distinctions and understates the count by exactly the factor k!; the sum check Σ_{k=0..n} (n choose k) = 2^n = number of all subsets is the cheapest way to detect that you counted the wrong kind of object."
+  ],
+  "needs_human_confirm": false,
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "不看任何筆記，寫出「The binomial coefficient（二項式係數）divides by k! because the two-route construction of an ordered k-sequence over-counts each subset exactly k! times」的完整推導鏈：從不可再約前提到結論，每一步只做一件事，並標明每一步用到哪個假設。",
+    "grading_key": [
+     "Route 1: build an ordered sequence of k distinct items one slot at a time; by the counting principle this gives n(n-1)···(n-k+1) = n!/(n-k)! sequences.",
+     "Route 2: first choose the underlying k-element subset in (n choose k) ways, then arrange those k items in k! orders; by the counting principle this gives (n choose k)·k! sequences.",
+     "Both routes count exactly the same set of ordered k-sequences, so by the double-counting premise (n choose k)·k! = n!/(n-k)!.",
+     "The n items are distinguishable and the k chosen items are distinct (no repetition)"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "「The binomial coefficient（二項式係數）divides by k! because the two-route construction of an ordered k-sequence over-counts each subset exactly k! times」在什麼情況下不成立？給一個具體反例（要有數字或明確設定），並說明是哪一條假設被破壞。",
+    "grading_key": [
+     "If selection is with replacement, an ordered sequence has n^k possibilities and repeated items have fewer than k! distinct orderings, so dividing by k! is not an integer division of a uniform over-count and n!/(k!(n-k)!) is simply the wrong count.",
+     "The n items are distinguishable and the k chosen items are distinct (no repetition)",
+     "The target objects are unordered subsets, and 0 ≤ k ≤ n"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "以下推理有一處錯，指出錯在哪一步並說明理由：「既然The basic counting principle (product over stages with choice-counts i…，因此「The binomial coefficient（二項式係數）divides by k! because the two-route construction of an ordered k-sequence over-counts each subset exactly k! times」成立；既然它成立，那麼就算不滿足「The n items are distinguishable and the k chosen items are d…」，結論也照樣成立。」",
+    "grading_key": [
+     "指出被偷偷放寬的假設：The n items are distinguishable and the k chosen items are d…",
+     "說明這條假設失效後，推導的哪一步最先塌",
+     "If selection is with replacement, an ordered sequence has n^k possibil…"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "用「The binomial coefficient（二項式係數）divides by k! because the two-route construction of an ordered k-sequence over-counts each subset exactly k! times」解釋你手上一個真實場景（雲端客戶用量預測／招募轉化漏斗／銷售線索評分）中的一個決策，並說出這個原理在該場景會在哪裡失效。",
+    "grading_key": [
+     "有具體決策",
+     "映射關係同構",
+     "指出場景中的失效條件"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "consecutive_lapses": 0,
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  }
+ },
+ {
+  "id": "A0023",
+  "source_name": "6.431x Unit 3｜L4 annotated slides",
+  "created_at": "2026-09-13T05:19:48+00:00",
+  "title": "A binomial probability（二項機率）factors into one probability times one count because every k-head sequence has the same probability p^k(1-p)^{n-k}",
+  "source_quote": "Binomial coefficient (n choose k) → Binomial probabilities. • n ≥ 1 independent coin tosses; P(H) = p • P(particular sequence) = [handwritten annotation] p^{#heads}(1-p)^{#tails} • P(particular k−head sequence) = [handwritten annotation] p^k(1-p)^{n-k}. P(k heads) = (n choose k) p^k (1-p)^{n-k} (slide p07)",
+  "salience": 9,
+  "irreducible_premises": [
+   "The n tosses are independent",
+   "Each toss has the same P(H) = p (identical marginals)",
+   "Finite additivity of probability over disjoint events",
+   "The number of length-n sequences with exactly k heads is (n choose k)"
+  ],
+  "derivation_chain": [
+   "By independence and identical marginals, the probability of one specific sequence is the product of its per-toss probabilities, e.g. P(HTTHHH) = p(1-p)(1-p)ppp = p^4(1-p)^2.",
+   "That product depends only on how many heads and tails occur, not on their positions, so every sequence with exactly k heads has the identical probability p^k(1-p)^{n-k}.",
+   "The event {k heads} is the disjoint union of all such sequences, so by additivity P(k heads) = (number of k-head sequences) · p^k(1-p)^{n-k}.",
+   "Choosing which k of the n slots hold the heads is exactly choosing a k-element subset of the slots, giving (n choose k) sequences, hence P(k heads) = (n choose k) p^k (1-p)^{n-k}.",
+   "Conditioning on B = {3 heads in 10} therefore induces a uniform law on the 3-head sequences, since each has the same p^3(1-p)^7; the conditional answer reduces to counting: P(A|B) = #(A∩B)/#B = (8 choose 1)/(10 choose 3) = 8/(10 choose 3)."
+  ],
+  "assumptions": [
+   "Tosses are independent AND identically distributed with the same p",
+   "n is fixed in advance, not chosen based on the results",
+   "0 ≤ k ≤ n"
+  ],
+  "failure_modes": [
+   "If the tosses are dependent (e.g. the coin is drawn once from a bag of biased coins and reused), sequences with the same k no longer share a probability, the factorisation collapses, and multiplying by (n choose k) attaches the wrong common weight to every term. The same defect breaks the counting shortcut on slide p09: the conditional law on B is uniform only because every 3-head sequence shares probability p^3(1-p)^7.",
+   "If p varies across tosses, P(sequence) is a product of different p_i and depends on WHICH positions are heads; the count (n choose k) then multiplies a non-representative single term and the result can be off in either direction.",
+   "If n is not fixed but determined by the data (e.g. stop at the third head), the set of possible sequences is not all length-n strings, the count (n choose k) includes impossible sequences, and the probabilities no longer sum to 1 over k."
+  ],
+  "needs_human_confirm": false,
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "不看任何筆記，寫出「A binomial probability（二項機率）factors into one probability times one count because every k-head sequence has the same probability p^k(1-p)^{n-k}」的完整推導鏈：從不可再約前提到結論，每一步只做一件事，並標明每一步用到哪個假設。",
+    "grading_key": [
+     "By independence and identical marginals, the probability of one specific sequence is the product of its per-toss probabilities, e.g. P(HTTHHH) = p(1-p)(1-p)ppp = p^4(1-p)^2.",
+     "That product depends only on how many heads and tails occur, not on their positions, so every sequence with exactly k heads has the identical probability p^k(1-p)^{n-k}.",
+     "The event {k heads} is the disjoint union of all such sequences, so by additivity P(k heads) = (number of k-head sequences) · p^k(1-p)^{n-k}.",
+     "Tosses are independent AND identically distributed with the same p"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "「A binomial probability（二項機率）factors into one probability times one count because every k-head sequence has the same probability p^k(1-p)^{n-k}」在什麼情況下不成立？給一個具體反例（要有數字或明確設定），並說明是哪一條假設被破壞。",
+    "grading_key": [
+     "If the tosses are dependent (e.g. the coin is drawn once from a bag of biased coins and reused), sequences with the same k no longer share a probability, the factorisation collapses, and multiplying by (n choose k) attaches the wrong common weight to every term. The same defect breaks the counting shortcut on slide p09: the conditional law on B is uniform only because every 3-head sequence shares probability p^3(1-p)^7.",
+     "Tosses are independent AND identically distributed with the same p",
+     "n is fixed in advance, not chosen based on the results"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "以下推理有一處錯，指出錯在哪一步並說明理由：「既然The n tosses are independent，因此「A binomial probability（二項機率）factors into one probability times one count because every k-head sequence has the same probability p^k(1-p)^{n-k}」成立；既然它成立，那麼就算不滿足「Tosses are independent AND identically distributed with the …」，結論也照樣成立。」",
+    "grading_key": [
+     "指出被偷偷放寬的假設：Tosses are independent AND identically distributed with the …",
+     "說明這條假設失效後，推導的哪一步最先塌",
+     "If the tosses are dependent (e.g. the coin is drawn once from a bag of…"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "用「A binomial probability（二項機率）factors into one probability times one count because every k-head sequence has the same probability p^k(1-p)^{n-k}」解釋你手上一個真實場景（雲端客戶用量預測／招募轉化漏斗／銷售線索評分）中的一個決策，並說出這個原理在該場景會在哪裡失效。",
+    "grading_key": [
+     "有具體決策",
+     "映射關係同構",
+     "指出場景中的失效條件"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "consecutive_lapses": 0,
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  }
+ },
+ {
+  "id": "A0024",
+  "source_name": "6.431x Unit 3｜L4 annotated slides",
+  "created_at": "2026-09-13T05:19:48+00:00",
+  "title": "The multinomial coefficient（多項式係數）counts partitions by dividing n! by the internal orderings each group absorbs",
+  "source_quote": "Partitions. • n ≥ 1 distinct items; r ≥ 1 persons give n_i items to person i — here n₁,...,n_r are given nonnegative integers — with n₁ + ··· + n_r = n • Ordering n items: [handwritten annotation] n! — Deal n_i to each person i, and then order [handwritten annotation] c · n₁! n₂! ··· n_r! = n!. number of partitions = n!/(n₁! n₂! ··· n_r!) (multinomial coefficient) (slide p10)",
+  "salience": 9,
+  "irreducible_premises": [
+   "The n items are distinct and the r persons (groups) are distinguishable",
+   "The group sizes n_i are fixed nonnegative integers with n₁ + ··· + n_r = n",
+   "The number of orderings of m distinct items is m!",
+   "The basic counting principle, applied to a two-route construction of one ordered list of all n items"
+  ],
+  "derivation_chain": [
+   "Route 1: order all n items in a single line — by permutations this can be done in n! ways.",
+   "Route 2: build the same line in stages — first choose the partition (call the unknown number of partitions c), assigning n_i items to the block of n_i consecutive slots belonging to person i, then order within each block in n_i! ways.",
+   "By the counting principle, route 2 yields c · n₁! n₂! ··· n_r! lists, and by double counting this equals n!.",
+   "Therefore c = n!/(n₁! n₂! ··· n_r!): each n_i! in the denominator is exactly the internal ordering of group i that the partition deliberately ignores.",
+   "The binomial coefficient is the case r = 2 with n₁ = k, n₂ = n-k, recovering n!/(k!(n-k)!) — combinations are a partition into 'chosen' and 'not chosen'."
+  ],
+  "assumptions": [
+   "Items are distinguishable and groups are labelled (person 1 vs person 2 is a different partition)",
+   "The sizes n_i are prescribed in advance and sum to n",
+   "Order within a group is irrelevant"
+  ],
+  "failure_modes": [
+   "If the groups are unlabelled (e.g. 'split 4 people into 2 pairs' with no named recipients), n!/(n₁!···n_r!) over-counts by the number of permutations of equal-sized groups — for two pairs it is exactly twice the true answer.",
+   "If the group sizes are not fixed but free to vary, the formula answers a different question and must be summed over all admissible size vectors; using one term understates the total.",
+   "If items are indistinguishable, the ordered-line route has fewer than n! distinct lists, the double-counting identity c · ∏ n_i! = n! is false, and the quotient no longer counts anything. The 52-card example on slide p11 works only because both numerator and denominator are partition counts of DISTINCT cards into four LABELLED 13-card hands, 52!/(13!13!13!13!), with all such partitions equally likely."
+  ],
+  "needs_human_confirm": false,
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "不看任何筆記，寫出「The multinomial coefficient（多項式係數）counts partitions by dividing n! by the internal orderings each group absorbs」的完整推導鏈：從不可再約前提到結論，每一步只做一件事，並標明每一步用到哪個假設。",
+    "grading_key": [
+     "Route 1: order all n items in a single line — by permutations this can be done in n! ways.",
+     "Route 2: build the same line in stages — first choose the partition (call the unknown number of partitions c), assigning n_i items to the block of n_i consecutive slots belonging to person i, then order within each block in n_i! ways.",
+     "By the counting principle, route 2 yields c · n₁! n₂! ··· n_r! lists, and by double counting this equals n!.",
+     "Items are distinguishable and groups are labelled (person 1 vs person 2 is a different partition)"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "「The multinomial coefficient（多項式係數）counts partitions by dividing n! by the internal orderings each group absorbs」在什麼情況下不成立？給一個具體反例（要有數字或明確設定），並說明是哪一條假設被破壞。",
+    "grading_key": [
+     "If the groups are unlabelled (e.g. 'split 4 people into 2 pairs' with no named recipients), n!/(n₁!···n_r!) over-counts by the number of permutations of equal-sized groups — for two pairs it is exactly twice the true answer.",
+     "Items are distinguishable and groups are labelled (person 1 vs person 2 is a different partition)",
+     "The sizes n_i are prescribed in advance and sum to n"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "以下推理有一處錯，指出錯在哪一步並說明理由：「既然The n items are distinct and the r persons (groups) are distinguishabl…，因此「The multinomial coefficient（多項式係數）counts partitions by dividing n! by the internal orderings each group absorbs」成立；既然它成立，那麼就算不滿足「Items are distinguishable and groups are labelled (person 1 …」，結論也照樣成立。」",
+    "grading_key": [
+     "指出被偷偷放寬的假設：Items are distinguishable and groups are labelled (person 1 …",
+     "說明這條假設失效後，推導的哪一步最先塌",
+     "If the groups are unlabelled (e.g. 'split 4 people into 2 pairs' with …"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "用「The multinomial coefficient（多項式係數）counts partitions by dividing n! by the internal orderings each group absorbs」解釋你手上一個真實場景（雲端客戶用量預測／招募轉化漏斗／銷售線索評分）中的一個決策，並說出這個原理在該場景會在哪裡失效。",
+    "grading_key": [
+     "有具體決策",
+     "映射關係同構",
+     "指出場景中的失效條件"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "consecutive_lapses": 0,
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  }
+ },
+ {
+  "id": "A0025",
+  "source_name": "6.431x Unit 3｜L4 annotated slides",
+  "created_at": "2026-09-13T05:19:48+00:00",
+  "title": "A counting-based probability is only as good as the sample space chosen, so switching to a coarser equally likely space can replace a huge count with a short product",
+  "source_quote": "Example: 52-card deck, dealt (fairly) to four players. Find P(each player gets an ace). • Outcomes are: [handwritten annotation] partition, equally likely — number of outcomes: 52!/(13!13!13!13!) (slide p11) ... A smart solution: Stack the deck, aces on top. [handwritten annotation] 39/51 · 26/50 · 13/49 = .105 (slide p12)",
+  "salience": 8,
+  "irreducible_premises": [
+   "The discrete uniform law: P(A) = |A|/|Ω| when outcomes are equally likely",
+   "The same physical experiment admits several different sample spaces (full partitions, or just the relative placement of the four aces)",
+   "A fair deal means every partition of the 52 distinct cards into four labelled 13-card hands is equally likely",
+   "Symmetry: under a fair deal, an ace is equally likely to land in any of the remaining slots"
+  ],
+  "derivation_chain": [
+   "Take Ω = all partitions into four 13-card hands; by the multinomial count |Ω| = 52!/(13!13!13!13!), and by fairness these are equally likely.",
+   "Count the favourable partitions by staged construction: distribute the four aces one per player in 4·3·2·1 ways, then distribute the remaining 48 cards as 48!/(12!12!12!12!), giving the ratio [4·3·2·1·48!/(12!^4)]/[52!/(13!^4)].",
+   "Alternatively pick the coarser space: stack the deck with the aces on top and ask only where each successive ace lands. Given the first ace's pile, 39 of the remaining 51 positions lie in other piles; then 26 of 50; then 13 of 49.",
+   "By the counting principle over these three stages and the uniform law on this coarser but still equally likely space, P = (39/51)(26/50)(13/49) ≈ .105 — the same number, obtained without ever evaluating a factorial.",
+   "Both routes agree because each is a correct uniform-law computation on its own consistent sample space; the choice of space is a modelling decision, not a mathematical one."
+  ],
+  "assumptions": [
+   "The deal is fair, so the chosen sample space really is equally likely",
+   "The coarser description (positions of the four aces relative to piles) preserves equal likelihood by symmetry",
+   "Numerator and denominator are counted in the same sample space"
+  ],
+  "failure_modes": [
+   "Coarsening a sample space usually destroys equal likelihood: lumping outcomes into 'each player gets an ace / not' gives two outcomes but not probability 1/2. The stacking argument is legitimate only because the symmetry of a fair deal makes each remaining position equally likely for the next ace — without that symmetry check the shortcut yields a confidently wrong number.",
+   "Mixing spaces mid-calculation — counting favourable cases as ordered deals but total cases as partitions — produces a ratio inflated or deflated by a factorial factor with no visible symptom, since both numbers are plausible-looking large integers.",
+   "If the deal were not fair (a stacked or partially dealt deck), the partitions are not equally likely, |A|/|Ω| no longer applies, and both the factorial route and the 39/51·26/50·13/49 route are invalid even though both still evaluate to .105."
+  ],
+  "needs_human_confirm": false,
+  "questions": [
+   {
+    "type": "free_recall",
+    "prompt": "不看任何筆記，寫出「A counting-based probability is only as good as the sample space chosen, so switching to a coarser equally likely space can replace a huge count with a short product」的完整推導鏈：從不可再約前提到結論，每一步只做一件事，並標明每一步用到哪個假設。",
+    "grading_key": [
+     "Take Ω = all partitions into four 13-card hands; by the multinomial count |Ω| = 52!/(13!13!13!13!), and by fairness these are equally likely.",
+     "Count the favourable partitions by staged construction: distribute the four aces one per player in 4·3·2·1 ways, then distribute the remaining 48 cards as 48!/(12!12!12!12!), giving the ratio [4·3·2·1·48!/(12!^4)]/[52!/(13!^4)].",
+     "Alternatively pick the coarser space: stack the deck with the aces on top and ask only where each successive ace lands. Given the first ace's pile, 39 of the remaining 51 positions lie in other piles; then 26 of 50; then 13 of 49.",
+     "The deal is fair, so the chosen sample space really is equally likely"
+    ]
+   },
+   {
+    "type": "boundary",
+    "prompt": "「A counting-based probability is only as good as the sample space chosen, so switching to a coarser equally likely space can replace a huge count with a short product」在什麼情況下不成立？給一個具體反例（要有數字或明確設定），並說明是哪一條假設被破壞。",
+    "grading_key": [
+     "Coarsening a sample space usually destroys equal likelihood: lumping outcomes into 'each player gets an ace / not' gives two outcomes but not probability 1/2. The stacking argument is legitimate only because the symmetry of a fair deal makes each remaining position equally likely for the next ace — without that symmetry check the shortcut yields a confidently wrong number.",
+     "The deal is fair, so the chosen sample space really is equally likely",
+     "The coarser description (positions of the four aces relative to piles) preserves equal likelihood by symmetry"
+    ]
+   },
+   {
+    "type": "error_hunt",
+    "prompt": "以下推理有一處錯，指出錯在哪一步並說明理由：「既然The discrete uniform law: P(A) = |A|/|Ω| when outcomes are equally lik…，因此「A counting-based probability is only as good as the sample space chosen, so switching to a coarser equally likely space can replace a huge count with a short product」成立；既然它成立，那麼就算不滿足「The deal is fair, so the chosen sample space really is equal…」，結論也照樣成立。」",
+    "grading_key": [
+     "指出被偷偷放寬的假設：The deal is fair, so the chosen sample space really is equal…",
+     "說明這條假設失效後，推導的哪一步最先塌",
+     "Coarsening a sample space usually destroys equal likelihood: lumping o…"
+    ]
+   },
+   {
+    "type": "transfer",
+    "prompt": "用「A counting-based probability is only as good as the sample space chosen, so switching to a coarser equally likely space can replace a huge count with a short product」解釋你手上一個真實場景（雲端客戶用量預測／招募轉化漏斗／銷售線索評分）中的一個決策，並說出這個原理在該場景會在哪裡失效。",
+    "grading_key": [
+     "有具體決策",
+     "映射關係同構",
+     "指出場景中的失效條件"
+    ]
+   }
+  ],
+  "feynman": {
+   "status": "pending",
+   "iterations": []
+  },
+  "consecutive_lapses": 0,
+  "fsrs": {
+   "state": "new",
+   "stability": 0,
+   "difficulty": 0,
+   "reps": 0,
+   "lapses": 0,
+   "due": null,
+   "last_review": null
+  }
+ }
+]
